@@ -358,6 +358,9 @@ class _ToolFilter:
     """
 
     def __init__(self, app, enabled, disabled):
+        from garmin_mcp.read_only import read_only_enabled
+
+        self._read_only = read_only_enabled()
         self._app = app
         self._enabled = enabled
         self._disabled = disabled
@@ -376,6 +379,13 @@ class _ToolFilter:
         # size for clients that forward both blocks (issue #331). Opt out
         # globally; callers can still pass structured_output=True explicitly.
         kwargs.setdefault("structured_output", False)
+        if self._read_only:
+            from mcp.types import ToolAnnotations
+
+            kwargs["annotations"] = ToolAnnotations(
+                readOnlyHint=True, destructiveHint=False,
+                openWorldHint=False, idempotentHint=True,
+            )
         decorator = self._app.tool(*args, **kwargs)
         # Prefer the explicit registered name if given (@app.tool(name="x")),
         # so the env-var filter matches what the user actually configures.
@@ -386,11 +396,20 @@ class _ToolFilter:
         def wrapper(fn):
             name = explicit or getattr(fn, "__name__", "")
             self._seen.add(name.lower())
+            if self._read_only:
+                from garmin_mcp.read_only import is_reviewed_read
+
+                if not is_reviewed_read(fn):
+                    return fn
             if self._allowed(name):
                 return decorator(fn)
             return fn  # skip registration; tool never reaches the LLM
 
         return wrapper
+
+    def add_tool(self, fn, *args, **kwargs):
+        """Guard imperative registration as well as @app.tool decorators."""
+        self.tool(*args, **kwargs)(fn)
 
     def unknown_filter_names(self):
         """Configured names that never matched a real tool (likely typos)."""
@@ -547,6 +566,10 @@ def init_api(email, password):
 
 def main():
     """Initialize the MCP server and register all tools"""
+    # All network transports use the mandatory-auth production composition.
+    if os.getenv("GARMIN_MCP_TRANSPORT", "stdio") != "stdio" or os.getenv("PORT") or os.getenv("RAILWAY_ENVIRONMENT_ID"):
+        from garmin_mcp.runtime import main as wellness_main
+        return wellness_main()
 
     # On Windows, stdout runs in text mode and translates \n to \r\n, which
     # breaks the MCP stdio framing that Claude Desktop and other clients expect.

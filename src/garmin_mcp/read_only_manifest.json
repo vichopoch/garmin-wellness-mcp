@@ -1,0 +1,1680 @@
+{
+  "modules": {
+    "garmin_mcp.activity_analysis": "66ed43062b51b3804263045b05e0068380a76a60e77115bd3ca3ab00b85ae741",
+    "garmin_mcp.activity_management": "9a07f632b1214e6e82e27ae6e6a8eae37e34d6f4ffb9ed3116f8868b6fc01f67",
+    "garmin_mcp.calendar_events": "d2238cce326623b40596ae46786d9259ef922a86434030096a0c48f413e1b92f",
+    "garmin_mcp.challenges": "0d5ae6ba87cfba147c31f755bd65b86ff7ca9ba092c588660a2d9b33d746ba16",
+    "garmin_mcp.courses": "dbd492e22f42392ef2a77bed5f2005c9cac2fe454e84b336a42b271485d4ac31",
+    "garmin_mcp.data_management": "d5fdfcd362c6c0c1f8aef651874a4ba80316b65f19e3334aa9e89c84b12487fc",
+    "garmin_mcp.devices": "6250e7cfa5c45d7609efb4a27d564d5103f7013f9d0b0a3dc10e2fddd245a551",
+    "garmin_mcp.gear_management": "4105d5b922b994bb4265b4ebc5d1e6f86aade61080978c056334c97af2a843ad",
+    "garmin_mcp.health_wellness": "1ff8602677ea18714b208bdef614bee95806894ee87b03f756e74d907bf07ce5",
+    "garmin_mcp.nutrition": "a82751524a904ad9ea509f0157fa9cd426ab4f983c85a6b9de6a2c20b9dc2702",
+    "garmin_mcp.training": "9935560c8395cea6befb86073f30131fd561e78038f7e77d857de424da88e341",
+    "garmin_mcp.user_profile": "61d8211d94cd82093fbcaf62a90342f699a60fcc288cdde34579c9dc32582c97",
+    "garmin_mcp.weight_management": "684f1f612e9704e1fe9435cadedfd469006f0eef04ea794cce07b22f4b5e69e8",
+    "garmin_mcp.wellness": "c39dcd5d3218084f7e879dd7db4dab7f0433a8f0979025930d4f9c1d203a21fe",
+    "garmin_mcp.womens_health": "22ab12d7bb1d7b3753715699ba7dea415b651a31f2464e66455eb45a9c774ca2",
+    "garmin_mcp.workout_builders": "6fad8386d6ba8bd4391d3d4230bd21802eabcc60b993bf5fcd7d81a19ad99d05",
+    "garmin_mcp.workouts": "ed9c764eef5eaa95674cdd9abaa41aec259b243cea728da66d78e0b0bf279f20"
+  },
+  "reviewed_sdk_version": "0.3.17",
+  "sdk_files": {
+    "garminconnect": "57c3f8d53a2f98f16af58827b43f0de388a02df3e1ecec3379e369c2bec04120",
+    "garminconnect.client": "2425e31d30f0ec9c5e8e1512bb622b64eaea8287910c6646839749f18fca74c5"
+  },
+  "sdk_mutating_methods": {
+    "add_body_composition": {
+      "evidence": "self.client.post('connectapi', url, files=files, api=True)",
+      "sha256": "ebce1d5ad18f3dd8b12e7bf5f741f378fcfd93aa892464a63e24177643441393"
+    },
+    "add_gear_to_activity": {
+      "evidence": "self.client.put('connectapi', url); self.client.put('connectapi', url).json()",
+      "sha256": "02859892e299594afd7af0e82f67822209d50417a061dd85cde27c7b801cbba8"
+    },
+    "add_hydration_data": {
+      "evidence": "self.client.put('connectapi', url, json=payload); self.client.put('connectapi', url, json=payload).json()",
+      "sha256": "2ec515ff14c71782c29317011c46417f7d22ab6ccd835f299dec437c2248033a"
+    },
+    "add_weigh_in": {
+      "evidence": "self.client.post('connectapi', url, json=payload)",
+      "sha256": "3c3c069dfa7ebc36c692379dd52c4904e37cece5eddbb82de950ce1fb965a25d"
+    },
+    "add_weigh_in_with_timestamps": {
+      "evidence": "self.client.post('connectapi', url, json=payload)",
+      "sha256": "31bfe2d3928161afe5e8e09a0f89e61a34ac45cc8b845f9cf197abcf5c8af485"
+    },
+    "create_manual_activity": {
+      "evidence": "self.create_manual_activity_from_json(payload)",
+      "sha256": "f3cd3f573b268f585f6063350f9a05ade1113da2b5e74a745ae5eed83ae5f696"
+    },
+    "create_manual_activity_from_json": {
+      "evidence": "self.client.post('connectapi', url, json=payload, api=True)",
+      "sha256": "165919d9b53d6a043663c9a77407e8f15c2842172c1d3f3cd70fc7e2338241ec"
+    },
+    "delete_weigh_in": {
+      "evidence": "self.client.request('DELETE', 'connectapi', url, api=True)",
+      "sha256": "0319850d2d06c6b75d772e7aad1f445197996c772d6e9a9f2e13d7f25a92d3aa"
+    },
+    "delete_weigh_ins": {
+      "evidence": "self.delete_weigh_in(w['samplePk'], cdate); self.get_daily_weigh_ins(cdate)",
+      "sha256": "66cd98b56ccc7d083ba976e30bd00262933cadd2b2223e496b7eb42e8c544b52"
+    },
+    "delete_workout": {
+      "evidence": "self.client.delete('connectapi', url, api=True)",
+      "sha256": "98ecbc40944f622121145b2dadc8e4f711e99ca29df72adf8f4257802e67c8ca"
+    },
+    "remove_gear_from_activity": {
+      "evidence": "self.client.put('connectapi', url); self.client.put('connectapi', url).json()",
+      "sha256": "b0a1c8845271607a5290c712050d91cfa2a62a620eb4896e1d5a4fed9ce470a6"
+    },
+    "request_reload": {
+      "evidence": "self.client.post('connectapi', url, api=True)",
+      "sha256": "1a4e8b8ddf64ce070860d7c83c4b90778e4f2577eacf375b0466759e2f12bfaf"
+    },
+    "set_activity_name": {
+      "evidence": "self.client.put('connectapi', url, json=payload, api=True)",
+      "sha256": "97a92943e05cc46ebf034c48c02f0eddc6ae6bad6fd3622f82c1f99b370c1964"
+    },
+    "set_activity_type": {
+      "evidence": "self.client.put('connectapi', url, json=payload, api=True)",
+      "sha256": "90bbd919da8eb42b4d673df5c8cf5788fafe8c52d63dda9817f14b5ce65e7a68"
+    },
+    "set_blood_pressure": {
+      "evidence": "self.client.post('connectapi', url, json=payload); self.client.post('connectapi', url, json=payload).json()",
+      "sha256": "155217ccd004b548b00b5e7e94e4da704a5bee0531e89c93b9453ee8b79887b0"
+    },
+    "unschedule_workout": {
+      "evidence": "self.client.delete('connectapi', url, api=True)",
+      "sha256": "7be24888c1716572578515a93180bd3eace82a3ac08be30b1bc86247cc57d8dc"
+    },
+    "upload_workout": {
+      "evidence": "self.client.post('connectapi', url, json=payload, api=True)",
+      "sha256": "8defef6a490eb4e90870cb6a749879e500e84724d2f15b248bb11d2f2fcaeb16"
+    }
+  },
+  "sdk_read_methods": {
+    "count_activities": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "aa4117036dfc95edf9014aede4787e7ab22b46e2e71357e55e647ed784c67075"
+    },
+    "download_activity": {
+      "evidence": "self.download(url)",
+      "sha256": "eabebb9a5d8e963b1afb5d99106892a968b8873c6637410f1cced333204947b5"
+    },
+    "download_health_snapshot": {
+      "evidence": "self.download(url)",
+      "sha256": "7417ebcdac6838a073a3ff18de182f3a13bad2eb79c6ab898b944686e9750172"
+    },
+    "download_workout": {
+      "evidence": "self.download(url)",
+      "sha256": "0641231b0cae7a9c8ab0186af1491358fc2da0dc57fa1cad74e9f51955aa14c0"
+    },
+    "get_activities": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "291d6a4cc87de0e7e1ee38753f872f2f10a23a72c25cf35f5bada14996a30d6c"
+    },
+    "get_activities_by_date": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "17955a238055beb9ad18689e72ecfc6a99f309609b212ab63a083f5aeee9577a"
+    },
+    "get_activities_fordate": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "c102de93aa7a9e0b927cae52158b36b200bc6d3eec728c38e6f162961558aafe"
+    },
+    "get_activity": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "1b7fe6116754e686bd3fd0507b5b2c3b960da3fca5f9b7e6fefe88fe78bbbc5d"
+    },
+    "get_activity_details": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "d61c08e2d3cace18a894a0cd6a98be4407cf522e727f9190f79c8a478fe577a6"
+    },
+    "get_activity_exercise_sets": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "dd9397a367b7292e4c660bb657a699b4e2eea7cb6e81b5aa4721e8b6d21e3e15"
+    },
+    "get_activity_gear": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "9e6b03f8a0f0cd58ff1982b5436faa12354aa6ca1c395dc5836492c0181c0ea7"
+    },
+    "get_activity_hr_in_timezones": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "a876ca403603ac787c6b5de90d2527e3714116ebeb208972b479471ce31fa96e"
+    },
+    "get_activity_power_in_timezones": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "32190d0e076e53624a843b5e055ff961c0169bf87a0caeafe7aa9f8f3e22ec9f"
+    },
+    "get_activity_split_summaries": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "10f5da971b41f6e63992b7e41f13ac4445d99f5929848194ce42e60bfdc97335"
+    },
+    "get_activity_splits": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "3b819aeadb5b3ef337a5a773736248072e7839d326941bcbbbd5abe5a3a9087d"
+    },
+    "get_activity_typed_splits": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "c21183bcc863d309b2017861ea080abec7d5f92550252a37012b7d7eb1b3ffae"
+    },
+    "get_activity_types": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "db25947e24054a43e7e26b311a9b8dcc0b69cd27d78901520b3bc2a4cbdd3d89"
+    },
+    "get_activity_weather": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "89b89e951e5260b824965469bb87cdf9e87e348c4c4d8051514e300e66016ccf"
+    },
+    "get_adaptive_training_plan_by_id": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "15a04fe2e558fcc35b563ac6103f7c3b27a34350b23eebc5dab96a970f97213b"
+    },
+    "get_adhoc_challenges": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "19325fb077b176e2d83b5b2e9480e02b972f52fff446d8d3ee8b44a2aa115e24"
+    },
+    "get_all_day_events": {
+      "evidence": "self.connectapi(url, params={'calendarDate': cdate})",
+      "sha256": "4a32fb416d0ad5e445acd8a544ea1e5c39fefaa263d919580d8d3ec2a9b11c9b"
+    },
+    "get_all_day_stress": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "4d8a1496ed8dd0efacdcc511141f2e17f194399ba5030b81d813d6b6c49a2f27"
+    },
+    "get_available_badge_challenges": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "a6c86772fff2aa9b37c5c60d678c374a348eaea8ac22d2fadb57e114e8ebb10b"
+    },
+    "get_available_badges": {
+      "evidence": "self.connectapi(url, params={'showExclusiveBadge': 'true'})",
+      "sha256": "79867aff581038bacb65259c3c79bf48db3896932cfb364a668b48df698f23bd"
+    },
+    "get_badge_challenges": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "53e8796486498d92e7b4020433fe92adc4666c635ef119af58ce7dcbb0768588"
+    },
+    "get_blood_pressure": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "bc00dbc46b391d1c924d057a93d5953a817e9ea7adbe180c0db964d1ca8917d3"
+    },
+    "get_body_battery": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "7a2cd8eae2a729c7ad0a9161394a27cb99b12fb3d62ad1161716a45648907226"
+    },
+    "get_body_battery_events": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "5464d3a7f2fe2d6016b0ccb546890b91b66d5baa7982f6841cf51df824228a0a"
+    },
+    "get_body_composition": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "e87336295574153ebf5723b253fa83dc0ad727db9661dc5cd443ed33a9061b01"
+    },
+    "get_calories_daily": {
+      "evidence": "self._require_display_name(); self.connectapi(url, params=params)",
+      "sha256": "218b6b56d0256644b3d0297c84558ece19d019b178e750f31a5979008ec1151a"
+    },
+    "get_cycling_ftp": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "1807ef60a4cf021989cdd50007e8eaae68f32f8ed6071e053e5e6df4b73a8fab"
+    },
+    "get_daily_steps": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "c33c09957a933e0eef921389f111bd2b8b9ec2de9d5137d8d0272a1442018917"
+    },
+    "get_daily_training_status": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "1b131d81206eeca0feed9c20f7cf0139b168ee0f80e0d13267ce0cf97ccd174c"
+    },
+    "get_daily_weigh_ins": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "83f3b06aaf31fb5bbda85a07dd3d09978d67e3cddca538ab4a2d0a0be1980160"
+    },
+    "get_device_alarms": {
+      "evidence": "self.get_device_settings(device['deviceId']); self.get_devices()",
+      "sha256": "07f640e548d963e42e11eaae0af2d98a0370e08d46c574ab73860509cdb9b788"
+    },
+    "get_device_last_used": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "068370d9153f4b1f64402d7ebe134dc8762eb1269d3dd014da4b409d1b05e30e"
+    },
+    "get_device_settings": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "9777bc8a509478ef9d95c1ecc6452289653ad03cf789b8403761be8d15bcb3d2"
+    },
+    "get_device_solar_data": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "27a51e4270b7734582ae90508fce30340317dbf1545b5dcbac0aa6091fe4ec62"
+    },
+    "get_devices": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "1be1eecaa0efeff50be076723963c6d62664b1c7d099372fc291f086f1e646fd"
+    },
+    "get_earned_badges": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "fb70916825c4067066ffd7abd3e8916fe70895da8dd05c2c0288c8dff36d843b"
+    },
+    "get_endurance_score": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "ad009a4e68d258be10e7fd5150ec36c6fe6c0f89e9a2a63ffbb5c0550b797456"
+    },
+    "get_fitnessage_data": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "0d00f84a6316a691e60a4588c965a4c00c812698c569c8f288c491f10a7792f0"
+    },
+    "get_floors": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "32ed7f47f37192b57c7e3e1491ba43918a3053c4a2e115b2e82248d34a511588"
+    },
+    "get_full_name": {
+      "evidence": "Returns cached profile attribute; no network or file write.",
+      "sha256": "56c53f967d59d57410633c3d472db5e2dc3a7a14c96aa7155cd82e467654b10c"
+    },
+    "get_functional_threshold_power_range": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "9c3044af1d36f7316e31ac566a217480dc5dc3dc96b87e1a041fb3ee58155dc1"
+    },
+    "get_gear": {
+      "evidence": "self.connectapi(url, params={'userProfilePk': userProfileNumber})",
+      "sha256": "a7e34db27026f00c52a9d7350e336abeee4c472814130c68bdc925d0cae3ebc6"
+    },
+    "get_gear_activities": {
+      "evidence": "self.connectapi(url, params={'start': 0, 'limit': limit})",
+      "sha256": "0af850852dd221c3b5213e8e26514a7c1b81230b0656c84ad1ac5975323c2f17"
+    },
+    "get_gear_defaults": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "15c9550749a016721fff699a24511c5ae5adbc394323c54cfe78a568259105ff"
+    },
+    "get_gear_stats": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "0030f55cf632f2693a14e092c98cd17fb7aaff10f572fe64f92dc0db39303471"
+    },
+    "get_goals": {
+      "evidence": "self.connectapi(url, params=params, headers=headers)",
+      "sha256": "0f76f213ef086d3774d73124f03fbd3b431e0c7ce754d9c5516eaac65d689674"
+    },
+    "get_golf_club_stats": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "f5c31f7bfdd02af7bfbaf437b0158a18e7ea7af33bbb7010f147d442da5c9599"
+    },
+    "get_golf_scorecard": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "823192c25a399dbc49bf5b6b3e52c7579fed24e5735dbeaad1796064d096bfc4"
+    },
+    "get_golf_shot_data": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "33a607d35c2c58f5900584e071fbc8f8549b7ca368032df519e8667a87eb0891"
+    },
+    "get_golf_summary": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "99ac5c63d61bfd4afbef0dc2d3973b18d4a8042ebd7099e7246b20c70e603a75"
+    },
+    "get_golf_user_stats": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "7d69c88b5cfbc035f4eacce41ff55c598c5507e89b216df28875f3ec705ff9a1"
+    },
+    "get_heart_rate_zones": {
+      "evidence": "self.connectapi(self.garmin_connect_heart_rate_zones_url)",
+      "sha256": "16687f664a4078af7669b1bd7f19dac9e6a8a20c6db627b841636d551f211f62"
+    },
+    "get_heart_rates": {
+      "evidence": "self._require_display_name(); self.connectapi(url, params=params)",
+      "sha256": "c30040a3df447c07fcc10f9456f5a95452aade664af916cfed50301351593e3d"
+    },
+    "get_hill_score": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "7b549a79aaffe3258b7b37f375d53b88fae5f650ca4efba4d45ec4750c566dd2"
+    },
+    "get_hrv_data": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "947c90e8d998666575509fe7121071254d478a7ba616c5a84733197155ea0624"
+    },
+    "get_hrv_data_range": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "171765333a8256a7788568c2174f345e6e71f14c220e2912dc77bfa4ecfd598f"
+    },
+    "get_hydration_data": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "67426bc7badd245b32caed8bc99636b2393608587ccfe2f2e862d6e1e1a1cd85"
+    },
+    "get_in_progress_badges": {
+      "evidence": "self.get_available_badges(); self.get_earned_badges()",
+      "sha256": "cae02b46170dd60439f925752dd7ac9766da766606cc3193202db4525a8eef9d"
+    },
+    "get_inprogress_virtual_challenges": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "8e185590a0664cc7d7d6a696101d846316428febc29b179fe238ec8ca2e613dc"
+    },
+    "get_intensity_minutes_data": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "8a272bc4454983333d35f8c03edd2bec3c6b383aa8f300353f4cc1e0df0ee246"
+    },
+    "get_lactate_threshold": {
+      "evidence": "self.connectapi(heart_rate_url, params=params); self.connectapi(power_url, params={'sport': 'Running'}); self.connectapi(speed_and_heart_rate_url); self.connectapi(speed_url, params=params); self.get_functional_threshold_power_range(start_date, end_date, sport='RUNNING', aggregation=aggregation)",
+      "sha256": "4fda475fd07026d61a1bf1d08efc305fc881b7bcc6f8bd59879e9d9600cb5663"
+    },
+    "get_last_activity": {
+      "evidence": "self.get_activities(0, 1)",
+      "sha256": "347ab43c6a0affe59ce4506944c0f32f3c846a1779a500fd616218ed58741b42"
+    },
+    "get_lifestyle_logging_data": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "fbda84e94edd7e1fd27bcebd402bb0e30fad328ab430dc90593d9fd9af2f65ff"
+    },
+    "get_max_metrics": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "78cf026a2fd96eb080a08b23c98b80c70733da49fc425b42ad8246a7751e7758"
+    },
+    "get_max_metrics_range": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "02c03bdd14ace8d740571207d335de89f84433f50c889a04d4ef71ec02a83d9f"
+    },
+    "get_menstrual_calendar_data": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "94f140d2f1bc1169d94faacd24f3d6d5ecbc132c75922cf17be480032a5d5d76"
+    },
+    "get_menstrual_cycle_summary": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "02ff1b94258c863ff86294cf2508c98d196e73d4f1dc736160bb6c31a2ff90e6"
+    },
+    "get_menstrual_data_for_date": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "4963e93d4c7c88c4feb1a7302f5ef14638ae23b93a611f0badf34bbb41fbfbdf"
+    },
+    "get_menstrual_last_confirmed": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "fea9e9fb7433b1d66ef446a5f6a4993d69bd9dd6097130e828800bd8d17d482f"
+    },
+    "get_menstrual_reports": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "6439deed15ece7fd691f18ff8fa3b1eea9604e5e2eb71b7b0781d6b2d4b56ea4"
+    },
+    "get_morning_training_readiness": {
+      "evidence": "self.get_training_readiness(cdate)",
+      "sha256": "fbd2b29e4ddb7ecbe94730204e62fc6d85127103e7754eabc23b7abc3d97dd70"
+    },
+    "get_next_scheduled_workout": {
+      "evidence": "self.get_scheduled_workouts(next_month_year, next_month); self.get_scheduled_workouts(today.year, today.month)",
+      "sha256": "1efc569ab0796200eb7e3551db2248b1fea0f18b01350eef32869904db5de1fc"
+    },
+    "get_non_completed_badge_challenges": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "6fab73fc2ed87f22e6f084c8ece577cb3f5a21f2fcdafa7d673ea77e4ff84b80"
+    },
+    "get_nutrition_daily_food_log": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "21f8c6510383f8a0241455d1cf22433b2b7c756bd8c9e324d97896288fd1bcc7"
+    },
+    "get_nutrition_daily_meals": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "11078c6c4894fc7240d11d049daae0233955f8c6d27ca5b09975b778e2a2f1ad"
+    },
+    "get_nutrition_daily_settings": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "57dc4f0fdf7010f7a8cc5221b362b8143f3ff1d9744ce16b31bbe42cbb009412"
+    },
+    "get_personal_record": {
+      "evidence": "self._require_display_name(); self.connectapi(url)",
+      "sha256": "f0dac3995ec16f68739709168a31a602346122ff8a69268d2be182cd8ac12c3f"
+    },
+    "get_power_zones": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "08e211021d01d2b928f406003583e2ebebd5c23df651c4364a7c6ca3eed672cb"
+    },
+    "get_power_zones_for_sport": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "57b44ea9a7418df7f2f71b2c785629f4701db0f8ea7cf387a1bccfd3e6ff3f05"
+    },
+    "get_pregnancy_summary": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "65a76206d06b448afe2e9d7f38f77a853fe71b2e6bae2c2dc621787dac1f74f5"
+    },
+    "get_primary_training_device": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "a7aaaa79154330c6d474a94af3d319c00ff3d92911e0f84c9cc3b3937f5f4dd1"
+    },
+    "get_progress_summary_between_dates": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "67f026d16c91d12c0bdcead00bc3d3b88a8ca6bdd3a756001547c92f8180a0a2"
+    },
+    "get_race_predictions": {
+      "evidence": "self._require_display_name(); self.connectapi(url); self.connectapi(url, params=params)",
+      "sha256": "3bff805086acf424e745ec75ba1eb8a206fe4240fbfa128948298b40df661dea"
+    },
+    "get_respiration_data": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "ea2a5583fdad26f496ffdfb0581976b03c4152388d1ed092154398b02928c07d"
+    },
+    "get_rhr_daily": {
+      "evidence": "self._require_display_name(); self.connectapi(url, params=params)",
+      "sha256": "866a4d99f55f8971eca6b1ea22b1139090cba12c998df7b0f856e3453f457ddd"
+    },
+    "get_rhr_day": {
+      "evidence": "self._require_display_name(); self.connectapi(url, params=params)",
+      "sha256": "cd6c5218f8b38b37c3175a485301b78c91f6550dd2a91d1149b02853696b89b0"
+    },
+    "get_running_tolerance": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "f656d2b923bd6c322cd9008bf58b5ef2e3010e0e7018aa63bc0cebbb0e16388d"
+    },
+    "get_scheduled_workout_by_id": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "db638fe1b1ad783ae4c07f4cfc04eeb22f4e979c13305b072d99b4f4618ca6ed"
+    },
+    "get_scheduled_workouts": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "065cac5e89171682547b7ffd6f01cc93ecc3a1625aea68fc67844a8edc1bb5c5"
+    },
+    "get_sleep_daily": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "1ef080e32b94b73c376c2c932249b16d65ba264dd9ff022f3bea7ae0c68e5c3f"
+    },
+    "get_sleep_data": {
+      "evidence": "self._require_display_name(); self.connectapi(url, params=params)",
+      "sha256": "44d268a955d60d86d0553d503bf7c2bbac9ba4590a81991b410d0fba92ccfd90"
+    },
+    "get_spo2_data": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "a1aa4507deb418a5dc3eb5e72b638a597ef5b3b3181ffceaf5b8d0d01442f0b2"
+    },
+    "get_stats": {
+      "evidence": "self.get_user_summary(cdate)",
+      "sha256": "16ac3f6288cc8fed7e0f1a26cf70be9f3d892dcb0fa77ee04c6d612d6f2743a9"
+    },
+    "get_stats_and_body": {
+      "evidence": "self.get_body_composition(cdate); self.get_stats(cdate)",
+      "sha256": "2ec87cc928d7e0c89f4cf54ef2ea8165c771bac65a946d9a11112d73b4233e0b"
+    },
+    "get_steps_data": {
+      "evidence": "self._require_display_name(); self.connectapi(url, params=params)",
+      "sha256": "76ad62ebeb7fb686869ca5a1b62a34adf5cf5d69fc2d3e3bede999a493b582d0"
+    },
+    "get_stress_data": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "f2cce8646244d7d53f78522a238ec8e414c60a5f73e57e20b3872e1b66ed18e5"
+    },
+    "get_training_four_week_load_balance": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "df24c505be4aae817cc41679ea0f95f31ecb97c59a2ecd5b6357af138ffd7295"
+    },
+    "get_training_load_activities": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "4158c93f67b24f0418b213d4347942453bb5da82c33337a1a5c0fd35e82a2f5a"
+    },
+    "get_training_plan_by_id": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "b4ffe07271f8967d474ae69c97569c0f64e64d4762143b32a94bb3bdad22de6e"
+    },
+    "get_training_plans": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "ceefe963a1268f5b768cedb461bf890cdfa0e4200ffced79d2f6f59df0c19618"
+    },
+    "get_training_readiness": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "d6bd0f6e3964f4230ad354c917a6208cc50ef4ca32510573168c0e59217c85a2"
+    },
+    "get_training_status": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "a5378ebbc990a61e2a72dad0a3c902639e9c003069647e2b6cfed9b926f4b21d"
+    },
+    "get_unit_system": {
+      "evidence": "Returns cached profile attribute; no network or file write.",
+      "sha256": "01c6c51f3ad520e6209c1b2a8d4cec0fa979c9036d7c9a920b512200d04aa6ac"
+    },
+    "get_user_profile": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "ec62383e6fec420a30581b36a1b7af5f39db601080e5698d0d4ef0ecf1891d35"
+    },
+    "get_user_summary": {
+      "evidence": "self._require_display_name(); self.connectapi(url, params=params)",
+      "sha256": "71449e1707f5658e181e7a2dbb51899648e385c1d00d0b58f963a925ccfb117d"
+    },
+    "get_userprofile_settings": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "a78dbd96dd66f2617b5a2f97702b9fb198190362d4d7e9c78bbd51ff2219fb1e"
+    },
+    "get_weekly_intensity_minutes": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "b1f0c00232eb04dd70bfdb1d8f1d299e0d08308157762705a59d835f029f6854"
+    },
+    "get_weekly_steps": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "b812dfe3f12cfc2dda86b1f8f996078bd6b09076eda302674fe949bf5a661cc3"
+    },
+    "get_weekly_stress": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "9bab7dc2b2f05a553fcaf94f8db6b30e31f50d674b70ea8cb4151b5b767e6fcf"
+    },
+    "get_weigh_ins": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "b336f17daa137dcfb3fe92e86b3e871056c8fcf574b5a7e8e338f309494b8593"
+    },
+    "get_workout_by_id": {
+      "evidence": "self.connectapi(url)",
+      "sha256": "26f872e836c6ccf9945bc887b093a7c3d244a189d105db4edd045e118dc9d70e"
+    },
+    "get_workouts": {
+      "evidence": "self.connectapi(url, params=params)",
+      "sha256": "467955a70272383ae7f8a92550e39ac28b0de33d18072f6d7edcf7cb0f523f32"
+    }
+  },
+  "tools": {
+    "garmin_mcp.activity_analysis.download_activity_file": {
+      "classification": "WRITE",
+      "evidence": "f.write(payload); garmin_client.download_activity(activity_id, dl_fmt=format_map[fmt]); open(file_path, 'wb'); open(path, 'r', encoding='utf-8'); os.makedirs(download_dir, exist_ok=True)",
+      "line": 1766,
+      "qualname": "register_tools.<locals>.download_activity_file"
+    },
+    "garmin_mcp.activity_analysis.get_activity_fit_data": {
+      "classification": "READ",
+      "evidence": "garmin_client.download_activity(activity_id, dl_fmt=Garmin.ActivityDownloadFormat.ORIGINAL); garmin_client.get_body_composition(activity_date_str)",
+      "line": 1556,
+      "qualname": "register_tools.<locals>.get_activity_fit_data"
+    },
+    "garmin_mcp.activity_analysis.get_activity_fit_messages": {
+      "classification": "READ",
+      "evidence": "garmin_client.download_activity(activity_id, dl_fmt=Garmin.ActivityDownloadFormat.ORIGINAL); getattr(candidate, 'name', None); getattr(candidate, attr, None); getattr(field, 'field_def', None); getattr(field, 'field_type', None); getattr(field, 'name', None); getattr(field, 'raw_value', None); getattr(field, 'type', None); getattr(field, 'units', None); getattr(field, 'value', None); getattr(field, source_attr, None); getattr(getattr(field, 'type', None), 'values', None); getattr(message, '_definition', None); getattr(message, 'definition', None); getattr(message, 'fields', []); getattr(message, 'name', None); getattr(metadata, 'name', None); getattr(selector_field, 'raw_value', None); getattr(selector_field, 'value', None); getattr(selector_type, 'values', {}); getattr(subtype_type, 'values', {}); getattr(value, 'isoformat', None)",
+      "line": 1466,
+      "qualname": "register_tools.<locals>.get_activity_fit_messages"
+    },
+    "garmin_mcp.activity_analysis.get_power_duration_curve": {
+      "classification": "READ",
+      "evidence": "garmin_client.download_activity(act_id, dl_fmt=Garmin.ActivityDownloadFormat.ORIGINAL); garmin_client.get_activities(0, num_activities)",
+      "line": 1653,
+      "qualname": "register_tools.<locals>.get_power_duration_curve"
+    },
+    "garmin_mcp.activity_analysis.set_fit_download_dir": {
+      "classification": "WRITE",
+      "evidence": "open(path, 'r', encoding='utf-8'); open(path, 'w', encoding='utf-8'); os.makedirs(abspath, exist_ok=True); os.makedirs(parent, exist_ok=True)",
+      "line": 1866,
+      "qualname": "register_tools.<locals>.set_fit_download_dir"
+    },
+    "garmin_mcp.activity_management.count_activities": {
+      "classification": "READ",
+      "evidence": "garmin_client.count_activities()",
+      "line": 812,
+      "qualname": "register_tools.<locals>.count_activities"
+    },
+    "garmin_mcp.activity_management.create_manual_activity": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.create_manual_activity(start_datetime=start_datetime, time_zone=time_zone, type_key=type_key, distance_km=distance_km, duration_min=duration_minutes, activity_name=name)",
+      "line": 892,
+      "qualname": "register_tools.<locals>.create_manual_activity"
+    },
+    "garmin_mcp.activity_management.get_activities": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_activities(start, limit)",
+      "line": 830,
+      "qualname": "register_tools.<locals>.get_activities"
+    },
+    "garmin_mcp.activity_management.get_activities_by_date": {
+      "classification": "READ",
+      "evidence": "garmin_client.connectapi(garmin_client.garmin_connect_activities, params=params)",
+      "line": 50,
+      "qualname": "register_tools.<locals>.get_activities_by_date"
+    },
+    "garmin_mcp.activity_management.get_activities_fordate": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_activities_fordate(date)",
+      "line": 161,
+      "qualname": "register_tools.<locals>.get_activities_fordate"
+    },
+    "garmin_mcp.activity_management.get_activity": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_activity(activity_id)",
+      "line": 210,
+      "qualname": "register_tools.<locals>.get_activity"
+    },
+    "garmin_mcp.activity_management.get_activity_exercise_sets": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_activity_exercise_sets(activity_id)",
+      "line": 795,
+      "qualname": "register_tools.<locals>.get_activity_exercise_sets"
+    },
+    "garmin_mcp.activity_management.get_activity_gear": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_activity_gear(activity_id)",
+      "line": 778,
+      "qualname": "register_tools.<locals>.get_activity_gear"
+    },
+    "garmin_mcp.activity_management.get_activity_hr_in_timezones": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_activity_hr_in_timezones(activity_id)",
+      "line": 741,
+      "qualname": "register_tools.<locals>.get_activity_hr_in_timezones"
+    },
+    "garmin_mcp.activity_management.get_activity_power_in_timezones": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_activity_power_in_timezones(activity_id)",
+      "line": 758,
+      "qualname": "register_tools.<locals>.get_activity_power_in_timezones"
+    },
+    "garmin_mcp.activity_management.get_activity_split_summaries": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_activity_split_summaries(activity_id)",
+      "line": 638,
+      "qualname": "register_tools.<locals>.get_activity_split_summaries"
+    },
+    "garmin_mcp.activity_management.get_activity_splits": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_activity_splits(activity_id)",
+      "line": 539,
+      "qualname": "register_tools.<locals>.get_activity_splits"
+    },
+    "garmin_mcp.activity_management.get_activity_typed_splits": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_activity_typed_splits(activity_id)",
+      "line": 621,
+      "qualname": "register_tools.<locals>.get_activity_typed_splits"
+    },
+    "garmin_mcp.activity_management.get_activity_types": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_activity_types()",
+      "line": 942,
+      "qualname": "register_tools.<locals>.get_activity_types"
+    },
+    "garmin_mcp.activity_management.get_activity_weather": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_activity_weather(activity_id); garmin_client.get_unit_system()",
+      "line": 655,
+      "qualname": "register_tools.<locals>.get_activity_weather"
+    },
+    "garmin_mcp.activity_management.set_activity_description": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.client.put('connectapi', url, json=body, api=True)",
+      "line": 386,
+      "qualname": "register_tools.<locals>.set_activity_description"
+    },
+    "garmin_mcp.activity_management.set_activity_event_type": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.client.put('connectapi', url, json=body, api=True); garmin_client.connectapi('/activity-service/activity/eventTypes')",
+      "line": 416,
+      "qualname": "register_tools.<locals>.set_activity_event_type"
+    },
+    "garmin_mcp.activity_management.set_activity_feel": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.client.put('connectapi', url, json=body, api=True)",
+      "line": 503,
+      "qualname": "register_tools.<locals>.set_activity_feel"
+    },
+    "garmin_mcp.activity_management.set_activity_name": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.set_activity_name(activity_id, activity_name)",
+      "line": 313,
+      "qualname": "register_tools.<locals>.set_activity_name"
+    },
+    "garmin_mcp.activity_management.set_activity_type": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.get_activity_types(); garmin_client.set_activity_type(activity_id, match['typeId'], match['typeKey'], match.get('parentTypeId'))",
+      "line": 341,
+      "qualname": "register_tools.<locals>.set_activity_type"
+    },
+    "garmin_mcp.activity_management.set_perceived_effort": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.client.put('connectapi', url, json=body, api=True)",
+      "line": 467,
+      "qualname": "register_tools.<locals>.set_perceived_effort"
+    },
+    "garmin_mcp.calendar_events.get_calendar_events": {
+      "classification": "READ",
+      "evidence": "garmin_client.connectapi(path); garmin_client.get_scheduled_workouts(year, month)",
+      "line": 147,
+      "qualname": "register_tools.<locals>.get_calendar_events"
+    },
+    "garmin_mcp.challenges.get_adhoc_challenges": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_adhoc_challenges(start, min(limit, 100))",
+      "line": 507,
+      "qualname": "register_tools.<locals>.get_adhoc_challenges"
+    },
+    "garmin_mcp.challenges.get_available_badge_challenges": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_available_badge_challenges(start, min(limit, 100))",
+      "line": 556,
+      "qualname": "register_tools.<locals>.get_available_badge_challenges"
+    },
+    "garmin_mcp.challenges.get_badge_challenges": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_badge_challenges(start, min(limit, 100))",
+      "line": 589,
+      "qualname": "register_tools.<locals>.get_badge_challenges"
+    },
+    "garmin_mcp.challenges.get_earned_badges": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_earned_badges()",
+      "line": 441,
+      "qualname": "register_tools.<locals>.get_earned_badges"
+    },
+    "garmin_mcp.challenges.get_goals": {
+      "classification": "READ",
+      "evidence": "client.connectapi(url, params=params, headers=dict(_GOALS_HEADERS)); client.get_goals(goal_type); getattr(client, 'garmin_connect_goals_url', None)",
+      "line": 371,
+      "qualname": "register_tools.<locals>.get_goals"
+    },
+    "garmin_mcp.challenges.get_inprogress_virtual_challenges": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_inprogress_virtual_challenges(start, min(limit, 100))",
+      "line": 696,
+      "qualname": "register_tools.<locals>.get_inprogress_virtual_challenges"
+    },
+    "garmin_mcp.challenges.get_non_completed_badge_challenges": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_non_completed_badge_challenges(start, min(limit, 100))",
+      "line": 622,
+      "qualname": "register_tools.<locals>.get_non_completed_badge_challenges"
+    },
+    "garmin_mcp.challenges.get_personal_record": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_personal_record()",
+      "line": 396,
+      "qualname": "register_tools.<locals>.get_personal_record"
+    },
+    "garmin_mcp.challenges.get_race_predictions": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_race_predictions()",
+      "line": 657,
+      "qualname": "register_tools.<locals>.get_race_predictions"
+    },
+    "garmin_mcp.courses.delete_course": {
+      "classification": "DESTRUCTIVE",
+      "evidence": "garmin_client.client.delete('connectapi', f'/course-service/course/{course_id}')",
+      "line": 382,
+      "qualname": "register_tools.<locals>.delete_course"
+    },
+    "garmin_mcp.courses.download_course_gpx": {
+      "classification": "WRITE",
+      "evidence": "f.write('\\n'.join(lines)); garmin_client.client.connectapi(f'/course-service/course/{course_id}'); open(target_path, 'w', encoding='utf-8'); os.makedirs(os.path.dirname(target_path), exist_ok=True)",
+      "line": 224,
+      "qualname": "register_tools.<locals>.download_course_gpx"
+    },
+    "garmin_mcp.courses.get_course_details": {
+      "classification": "READ",
+      "evidence": "garmin_client.client.connectapi(f'/course-service/course/{course_id}')",
+      "line": 182,
+      "qualname": "register_tools.<locals>.get_course_details"
+    },
+    "garmin_mcp.courses.get_courses": {
+      "classification": "READ",
+      "evidence": "garmin_client.client.connectapi('/course-service/course')",
+      "line": 152,
+      "qualname": "register_tools.<locals>.get_courses"
+    },
+    "garmin_mcp.courses.upload_course": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.client.post('connectapi', '/course-service/course', json=payload, api=True); garmin_client.client.post('connectapi', '/course-service/course/import', files={'file': (os.path.basename(gpx_path), io.BytesIO(gpx_bytes), 'application/gpx+xml')}, api=True); open(gpx_path, 'rb')",
+      "line": 296,
+      "qualname": "register_tools.<locals>.upload_course"
+    },
+    "garmin_mcp.data_management.add_body_composition": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.add_body_composition(date, weight=weight, percent_fat=percent_fat, percent_hydration=percent_hydration, visceral_fat_mass=visceral_fat_mass, bone_mass=bone_mass, muscle_mass=muscle_mass, basal_met=basal_met, active_met=active_met, physique_rating=physique_rating, metabolic_age=metabolic_age, visceral_fat_rating=visceral_fat_rating, bmi=bmi)",
+      "line": 22,
+      "qualname": "register_tools.<locals>.add_body_composition"
+    },
+    "garmin_mcp.data_management.add_hydration_data": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.add_hydration_data(value_in_ml=value_in_ml, cdate=cdate, timestamp=timestamp)",
+      "line": 98,
+      "qualname": "register_tools.<locals>.add_hydration_data"
+    },
+    "garmin_mcp.data_management.set_blood_pressure": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.set_blood_pressure(systolic, diastolic, pulse, notes=notes)",
+      "line": 75,
+      "qualname": "register_tools.<locals>.set_blood_pressure"
+    },
+    "garmin_mcp.devices.get_device_alarms": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_device_alarms()",
+      "line": 279,
+      "qualname": "register_tools.<locals>.get_device_alarms"
+    },
+    "garmin_mcp.devices.get_device_last_used": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_device_last_used()",
+      "line": 62,
+      "qualname": "register_tools.<locals>.get_device_last_used"
+    },
+    "garmin_mcp.devices.get_device_settings": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_device_last_used(); garmin_client.get_device_settings(device_id)",
+      "line": 95,
+      "qualname": "register_tools.<locals>.get_device_settings"
+    },
+    "garmin_mcp.devices.get_device_solar_data": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_device_solar_data(device_id, date)",
+      "line": 229,
+      "qualname": "register_tools.<locals>.get_device_solar_data"
+    },
+    "garmin_mcp.devices.get_devices": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_devices()",
+      "line": 23,
+      "qualname": "register_tools.<locals>.get_devices"
+    },
+    "garmin_mcp.devices.get_primary_training_device": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_primary_training_device()",
+      "line": 177,
+      "qualname": "register_tools.<locals>.get_primary_training_device"
+    },
+    "garmin_mcp.gear_management.add_gear_to_activity": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.add_gear_to_activity(gear_uuid, activity_id)",
+      "line": 194,
+      "qualname": "register_tools.<locals>.add_gear_to_activity"
+    },
+    "garmin_mcp.gear_management.get_gear": {
+      "classification": "READ",
+      "evidence": "garmin_client.connectapi(GEAR_V2_LIST_ENDPOINT); garmin_client.get_device_last_used(); garmin_client.get_gear(user_profile_id); garmin_client.get_gear_defaults(user_profile_id); garmin_client.get_gear_stats(uuid)",
+      "line": 53,
+      "qualname": "register_tools.<locals>.get_gear"
+    },
+    "garmin_mcp.gear_management.remove_gear_from_activity": {
+      "classification": "DESTRUCTIVE",
+      "evidence": "garmin_client.remove_gear_from_activity(gear_uuid, activity_id)",
+      "line": 219,
+      "qualname": "register_tools.<locals>.remove_gear_from_activity"
+    },
+    "garmin_mcp.health_wellness.get_all_day_events": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_all_day_events(date)",
+      "line": 1448,
+      "qualname": "register_tools.<locals>.get_all_day_events"
+    },
+    "garmin_mcp.health_wellness.get_all_day_stress": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_all_day_stress(date)",
+      "line": 1432,
+      "qualname": "register_tools.<locals>.get_all_day_stress"
+    },
+    "garmin_mcp.health_wellness.get_blood_pressure": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_blood_pressure(start_date, end_date)",
+      "line": 1066,
+      "qualname": "register_tools.<locals>.get_blood_pressure"
+    },
+    "garmin_mcp.health_wellness.get_body_battery": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_body_battery(start_date, end_date)",
+      "line": 1004,
+      "qualname": "register_tools.<locals>.get_body_battery"
+    },
+    "garmin_mcp.health_wellness.get_body_battery_events": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_body_battery_events(date)",
+      "line": 1050,
+      "qualname": "register_tools.<locals>.get_body_battery_events"
+    },
+    "garmin_mcp.health_wellness.get_body_composition": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_body_composition(start_date); garmin_client.get_body_composition(start_date, end_date)",
+      "line": 872,
+      "qualname": "register_tools.<locals>.get_body_composition"
+    },
+    "garmin_mcp.health_wellness.get_daily_steps": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_daily_steps(start_date, end_date)",
+      "line": 929,
+      "qualname": "register_tools.<locals>.get_daily_steps"
+    },
+    "garmin_mcp.health_wellness.get_energy_balance": {
+      "classification": "READ",
+      "evidence": "client.connectapi('/nutrition-service/food/logs/range', params={'startDate': start.isoformat(), 'endDate': end.isoformat()}); client.connectapi(url, params={'statsType': 'CALORIES'}); garmin_client.get_body_composition(start_date, end_date)",
+      "line": 571,
+      "qualname": "register_tools.<locals>.get_energy_balance"
+    },
+    "garmin_mcp.health_wellness.get_floors": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_floors(date)",
+      "line": 1083,
+      "qualname": "register_tools.<locals>.get_floors"
+    },
+    "garmin_mcp.health_wellness.get_heart_rates": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_heart_rates(date)",
+      "line": 1115,
+      "qualname": "register_tools.<locals>.get_heart_rates"
+    },
+    "garmin_mcp.health_wellness.get_heart_rates_summary": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_heart_rates(date)",
+      "line": 1134,
+      "qualname": "register_tools.<locals>.get_heart_rates_summary"
+    },
+    "garmin_mcp.health_wellness.get_hydration_data": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_hydration_data(date)",
+      "line": 1172,
+      "qualname": "register_tools.<locals>.get_hydration_data"
+    },
+    "garmin_mcp.health_wellness.get_lifestyle_logging_data": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_lifestyle_logging_data(date)",
+      "line": 1464,
+      "qualname": "register_tools.<locals>.get_lifestyle_logging_data"
+    },
+    "garmin_mcp.health_wellness.get_morning_training_readiness": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_morning_training_readiness(date)",
+      "line": 1628,
+      "qualname": "register_tools.<locals>.get_morning_training_readiness"
+    },
+    "garmin_mcp.health_wellness.get_recovery_time_remaining": {
+      "classification": "READ",
+      "evidence": "get_activities(0, 20); getattr(client, 'get_activities', None); getattr(client, 'get_morning_training_readiness', None); getattr(client, 'get_training_readiness', None)",
+      "line": 1669,
+      "qualname": "register_tools.<locals>.get_recovery_time_remaining"
+    },
+    "garmin_mcp.health_wellness.get_respiration_data": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_respiration_data(date)",
+      "line": 1349,
+      "qualname": "register_tools.<locals>.get_respiration_data"
+    },
+    "garmin_mcp.health_wellness.get_respiration_summary": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_respiration_data(date)",
+      "line": 1368,
+      "qualname": "register_tools.<locals>.get_respiration_summary"
+    },
+    "garmin_mcp.health_wellness.get_rhr_day": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_rhr_day(date)",
+      "line": 1099,
+      "qualname": "register_tools.<locals>.get_rhr_day"
+    },
+    "garmin_mcp.health_wellness.get_sleep_data": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_sleep_data(date)",
+      "line": 1188,
+      "qualname": "register_tools.<locals>.get_sleep_data"
+    },
+    "garmin_mcp.health_wellness.get_sleep_summary": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_sleep_data(date)",
+      "line": 1207,
+      "qualname": "register_tools.<locals>.get_sleep_summary"
+    },
+    "garmin_mcp.health_wellness.get_sleep_summary_range": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_sleep_data(date_str)",
+      "line": 1229,
+      "qualname": "register_tools.<locals>.get_sleep_summary_range"
+    },
+    "garmin_mcp.health_wellness.get_spo2_data": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_spo2_data(date)",
+      "line": 1397,
+      "qualname": "register_tools.<locals>.get_spo2_data"
+    },
+    "garmin_mcp.health_wellness.get_stats": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_stats(date)",
+      "line": 405,
+      "qualname": "register_tools.<locals>.get_stats"
+    },
+    "garmin_mcp.health_wellness.get_stats_and_body": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_stats_and_body(date)",
+      "line": 894,
+      "qualname": "register_tools.<locals>.get_stats_and_body"
+    },
+    "garmin_mcp.health_wellness.get_stats_range": {
+      "classification": "READ",
+      "evidence": "garmin_client.connectapi(url, params={'statsType': 'CALORIES'}); garmin_client.connectapi(url, params={'statsType': 'STEPS'})",
+      "line": 488,
+      "qualname": "register_tools.<locals>.get_stats_range"
+    },
+    "garmin_mcp.health_wellness.get_steps_data": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_steps_data(date)",
+      "line": 910,
+      "qualname": "register_tools.<locals>.get_steps_data"
+    },
+    "garmin_mcp.health_wellness.get_stress_data": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_stress_data(date)",
+      "line": 1285,
+      "qualname": "register_tools.<locals>.get_stress_data"
+    },
+    "garmin_mcp.health_wellness.get_stress_summary": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_stress_data(date)",
+      "line": 1304,
+      "qualname": "register_tools.<locals>.get_stress_summary"
+    },
+    "garmin_mcp.health_wellness.get_training_readiness": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_training_readiness(date)",
+      "line": 946,
+      "qualname": "register_tools.<locals>.get_training_readiness"
+    },
+    "garmin_mcp.health_wellness.get_user_summary": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_user_summary(date)",
+      "line": 856,
+      "qualname": "register_tools.<locals>.get_user_summary"
+    },
+    "garmin_mcp.health_wellness.get_weekly_intensity_minutes": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_weekly_intensity_minutes(start_date, end_date)",
+      "line": 1572,
+      "qualname": "register_tools.<locals>.get_weekly_intensity_minutes"
+    },
+    "garmin_mcp.health_wellness.get_weekly_steps": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_weekly_steps(end_date, weeks)",
+      "line": 1483,
+      "qualname": "register_tools.<locals>.get_weekly_steps"
+    },
+    "garmin_mcp.health_wellness.get_weekly_stress": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_weekly_stress(end_date, weeks)",
+      "line": 1530,
+      "qualname": "register_tools.<locals>.get_weekly_stress"
+    },
+    "garmin_mcp.nutrition.create_custom_food": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.client.put('connectapi', url, json=payload, api=True); getattr(e.error.response, 'text', '')",
+      "line": 416,
+      "qualname": "register_tools.<locals>.create_custom_food"
+    },
+    "garmin_mcp.nutrition.delete_custom_food": {
+      "classification": "DESTRUCTIVE",
+      "evidence": "garmin_client.client.delete('connectapi', url, api=True); getattr(e.error.response, 'text', '')",
+      "line": 668,
+      "qualname": "register_tools.<locals>.delete_custom_food"
+    },
+    "garmin_mcp.nutrition.delete_food_log": {
+      "classification": "DESTRUCTIVE",
+      "evidence": "garmin_client.client.delete('connectapi', url, json={'logIds': [log_id]}, api=True); getattr(e.error.response, 'text', '')",
+      "line": 870,
+      "qualname": "register_tools.<locals>.delete_food_log"
+    },
+    "garmin_mcp.nutrition.get_custom_food_serving_units": {
+      "classification": "READ",
+      "evidence": "garmin_client.connectapi(url)",
+      "line": 400,
+      "qualname": "register_tools.<locals>.get_custom_food_serving_units"
+    },
+    "garmin_mcp.nutrition.get_custom_foods": {
+      "classification": "READ",
+      "evidence": "garmin_client.connectapi('/nutrition-service/customFood', params={'searchExpression': search, 'start': start, 'limit': limit, 'includeContent': 'true'})",
+      "line": 365,
+      "qualname": "register_tools.<locals>.get_custom_foods"
+    },
+    "garmin_mcp.nutrition.get_nutrition_daily_food_log": {
+      "classification": "READ",
+      "evidence": "garmin_client.connectapi(url)",
+      "line": 79,
+      "qualname": "register_tools.<locals>.get_nutrition_daily_food_log"
+    },
+    "garmin_mcp.nutrition.get_nutrition_daily_meals": {
+      "classification": "READ",
+      "evidence": "garmin_client.connectapi(url)",
+      "line": 168,
+      "qualname": "register_tools.<locals>.get_nutrition_daily_meals"
+    },
+    "garmin_mcp.nutrition.get_nutrition_daily_settings": {
+      "classification": "READ",
+      "evidence": "garmin_client.connectapi(url)",
+      "line": 188,
+      "qualname": "register_tools.<locals>.get_nutrition_daily_settings"
+    },
+    "garmin_mcp.nutrition.get_nutrition_summary_between_dates": {
+      "classification": "READ",
+      "evidence": "garmin_client.connectapi('/nutrition-service/food/logs/range', params={'startDate': start_date, 'endDate': end_date})",
+      "line": 98,
+      "qualname": "register_tools.<locals>.get_nutrition_summary_between_dates"
+    },
+    "garmin_mcp.nutrition.log_custom_food": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.client.put('connectapi', url, json=payload, api=True); garmin_client.connectapi(meals_url); getattr(e.error.response, 'text', '')",
+      "line": 696,
+      "qualname": "register_tools.<locals>.log_custom_food"
+    },
+    "garmin_mcp.nutrition.log_food": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.client.put('connectapi', url, json=payload, api=True); garmin_client.connectapi(meals_url); getattr(e.error.response, 'text', '')",
+      "line": 787,
+      "qualname": "register_tools.<locals>.log_food"
+    },
+    "garmin_mcp.nutrition.search_foods": {
+      "classification": "READ",
+      "evidence": "garmin_client.connectapi('/nutrition-service/food/search', params={'searchExpression': query, 'start': start, 'limit': limit})",
+      "line": 291,
+      "qualname": "register_tools.<locals>.search_foods"
+    },
+    "garmin_mcp.nutrition.set_nutrition_daily_settings": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.client.put('connectapi', url, json=current, api=True); garmin_client.connectapi(url)",
+      "line": 207,
+      "qualname": "register_tools.<locals>.set_nutrition_daily_settings"
+    },
+    "garmin_mcp.nutrition.update_custom_food": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.client.put('connectapi', url, json=payload, api=True); garmin_client.connectapi('/nutrition-service/customFood', params={'searchExpression': food_name, 'start': 0, 'limit': 20, 'includeContent': 'true'}); getattr(e.error.response, 'text', '')",
+      "line": 523,
+      "qualname": "register_tools.<locals>.update_custom_food"
+    },
+    "garmin_mcp.nutrition.upsert_and_log": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.client.put('connectapi', '/nutrition-service/customFood', json=create_payload, api=True); garmin_client.client.put('connectapi', '/nutrition-service/food/logs', json=log_payload, api=True); garmin_client.connectapi('/nutrition-service/customFood', params={'searchExpression': food_name, 'start': 0, 'limit': 10, 'includeContent': 'true'}); garmin_client.connectapi(f'/nutrition-service/meals/{meal_date}'); getattr(e.error.response, 'text', '')",
+      "line": 895,
+      "qualname": "register_tools.<locals>.upsert_and_log"
+    },
+    "garmin_mcp.training.get_acclimation": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_max_metrics(date)",
+      "line": 1665,
+      "qualname": "register_tools.<locals>.get_acclimation"
+    },
+    "garmin_mcp.training.get_cycling_ftp": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_cycling_ftp()",
+      "line": 861,
+      "qualname": "register_tools.<locals>.get_cycling_ftp"
+    },
+    "garmin_mcp.training.get_endurance_score": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_activity_types(); garmin_client.get_endurance_score(start_date, end_date)",
+      "line": 478,
+      "qualname": "register_tools.<locals>.get_endurance_score"
+    },
+    "garmin_mcp.training.get_fitnessage_data": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_fitnessage_data(date)",
+      "line": 697,
+      "qualname": "register_tools.<locals>.get_fitnessage_data"
+    },
+    "garmin_mcp.training.get_hill_score": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_hill_score(start_date, end_date)",
+      "line": 421,
+      "qualname": "register_tools.<locals>.get_hill_score"
+    },
+    "garmin_mcp.training.get_hrv_data": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_hrv_data(date)",
+      "line": 637,
+      "qualname": "register_tools.<locals>.get_hrv_data"
+    },
+    "garmin_mcp.training.get_hrv_trend": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_hrv_data(date_str)",
+      "line": 1217,
+      "qualname": "register_tools.<locals>.get_hrv_trend"
+    },
+    "garmin_mcp.training.get_lactate_threshold": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_lactate_threshold(latest=False, start_date=start_date, end_date=end_date); garmin_client.get_lactate_threshold(latest=True)",
+      "line": 889,
+      "qualname": "register_tools.<locals>.get_lactate_threshold"
+    },
+    "garmin_mcp.training.get_progress_summary_between_dates": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_progress_summary_between_dates(start_date, end_date, metric)",
+      "line": 353,
+      "qualname": "register_tools.<locals>.get_progress_summary_between_dates"
+    },
+    "garmin_mcp.training.get_respiration_trend": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_respiration_data(date_str)",
+      "line": 1446,
+      "qualname": "register_tools.<locals>.get_respiration_trend"
+    },
+    "garmin_mcp.training.get_running_tolerance": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_running_tolerance(date, date, aggregation='daily')",
+      "line": 1513,
+      "qualname": "register_tools.<locals>.get_running_tolerance"
+    },
+    "garmin_mcp.training.get_running_tolerance_trend": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_running_tolerance(start_date, end_date, aggregation=aggregation)",
+      "line": 1555,
+      "qualname": "register_tools.<locals>.get_running_tolerance_trend"
+    },
+    "garmin_mcp.training.get_training_effect": {
+      "classification": "READ",
+      "evidence": "connectapi(url, params=params); garmin_client.get_activity(activity_id); get_activities(0, limit); getattr(client, 'connectapi', None); getattr(client, 'garmin_connect_activities', '/activitylist-service/activities/search/activities'); getattr(client, 'get_activities', None)",
+      "line": 592,
+      "qualname": "register_tools.<locals>.get_training_effect"
+    },
+    "garmin_mcp.training.get_training_load_balance": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_training_status(date)",
+      "line": 1118,
+      "qualname": "register_tools.<locals>.get_training_load_balance"
+    },
+    "garmin_mcp.training.get_training_load_trend": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_training_status(date_str)",
+      "line": 1010,
+      "qualname": "register_tools.<locals>.get_training_load_trend"
+    },
+    "garmin_mcp.training.get_training_status": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_training_status(date)",
+      "line": 776,
+      "qualname": "register_tools.<locals>.get_training_status"
+    },
+    "garmin_mcp.training.get_vo2max_trend": {
+      "classification": "READ",
+      "evidence": "connectapi(f'{metrics_url}/{start_date}/{end_date}'); garmin_client.get_user_profile(); getattr(client, 'connectapi', None); getattr(client, 'garmin_connect_metrics_url', None); getattr(garmin_client, method_name, None)",
+      "line": 1291,
+      "qualname": "register_tools.<locals>.get_vo2max_trend"
+    },
+    "garmin_mcp.training.request_reload": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.request_reload(date)",
+      "line": 997,
+      "qualname": "register_tools.<locals>.request_reload"
+    },
+    "garmin_mcp.user_profile.get_full_name": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_full_name()",
+      "line": 118,
+      "qualname": "register_tools.<locals>.get_full_name"
+    },
+    "garmin_mcp.user_profile.get_heart_rate_zones": {
+      "classification": "READ",
+      "evidence": "garmin_client.connectapi(_HEART_RATE_ZONES_URL)",
+      "line": 158,
+      "qualname": "register_tools.<locals>.get_heart_rate_zones"
+    },
+    "garmin_mcp.user_profile.get_unit_system": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_unit_system()",
+      "line": 127,
+      "qualname": "register_tools.<locals>.get_unit_system"
+    },
+    "garmin_mcp.user_profile.get_user_profile": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_user_profile()",
+      "line": 136,
+      "qualname": "register_tools.<locals>.get_user_profile"
+    },
+    "garmin_mcp.user_profile.get_userprofile_settings": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_userprofile_settings()",
+      "line": 147,
+      "qualname": "register_tools.<locals>.get_userprofile_settings"
+    },
+    "garmin_mcp.user_profile.set_heart_rate_zones": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.client.request('PUT', 'connectapi', _HEART_RATE_ZONES_URL, json=[current], api=True); garmin_client.connectapi(_HEART_RATE_ZONES_URL)",
+      "line": 185,
+      "qualname": "register_tools.<locals>.set_heart_rate_zones"
+    },
+    "garmin_mcp.weight_management.add_weigh_in": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.add_weigh_in(weight=weight, unitKey=unit_key)",
+      "line": 156,
+      "qualname": "register_tools.<locals>.add_weigh_in"
+    },
+    "garmin_mcp.weight_management.add_weigh_in_with_timestamps": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.add_weigh_in_with_timestamps(weight=weight, unitKey=unit_key, dateTimestamp=date_timestamp, gmtTimestamp=gmt_timestamp)",
+      "line": 176,
+      "qualname": "register_tools.<locals>.add_weigh_in_with_timestamps"
+    },
+    "garmin_mcp.weight_management.delete_weigh_ins": {
+      "classification": "DESTRUCTIVE",
+      "evidence": "garmin_client.delete_weigh_ins(date, delete_all=delete_all)",
+      "line": 136,
+      "qualname": "register_tools.<locals>.delete_weigh_ins"
+    },
+    "garmin_mcp.weight_management.get_daily_weigh_ins": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_daily_weigh_ins(date)",
+      "line": 86,
+      "qualname": "register_tools.<locals>.get_daily_weigh_ins"
+    },
+    "garmin_mcp.weight_management.get_weigh_ins": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_weigh_ins(start_date, end_date)",
+      "line": 22,
+      "qualname": "register_tools.<locals>.get_weigh_ins"
+    },
+    "garmin_mcp.wellness.compare_periods": {
+      "classification": "READ",
+      "evidence": "service.series(metric, period_a_start, period_a_end); service.series(metric, period_b_start, period_b_end)",
+      "line": 541,
+      "qualname": "register_tools.<locals>.compare_periods",
+      "wrapper_qualnames": [
+        "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
+      ]
+    },
+    "garmin_mcp.wellness.find_correlations": {
+      "classification": "READ",
+      "evidence": "service.series(metric_x, start_date, end_date); service.series(metric_y, start_date, end_date)",
+      "line": 562,
+      "qualname": "register_tools.<locals>.find_correlations",
+      "wrapper_qualnames": [
+        "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
+      ]
+    },
+    "garmin_mcp.wellness.get_activities": {
+      "classification": "READ",
+      "evidence": "service.call('get_activities', offset, limit)",
+      "line": 499,
+      "qualname": "register_tools.<locals>.get_activities",
+      "wrapper_qualnames": [
+        "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
+      ]
+    },
+    "garmin_mcp.wellness.get_activity": {
+      "classification": "READ",
+      "evidence": "service.call('get_activity', activity_id)",
+      "line": 509,
+      "qualname": "register_tools.<locals>.get_activity",
+      "wrapper_qualnames": [
+        "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
+      ]
+    },
+    "garmin_mcp.wellness.get_body_battery": {
+      "classification": "READ",
+      "evidence": "section(date, 'body_battery') -> service.daily(day, groups=(group,)) -> fixed reviewed SDK methods",
+      "line": 466,
+      "qualname": "register_tools.<locals>.get_body_battery",
+      "wrapper_qualnames": [
+        "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
+      ]
+    },
+    "garmin_mcp.wellness.get_capabilities": {
+      "classification": "READ",
+      "evidence": "service.daily(today); service.daily(yesterday); service.today()",
+      "line": 376,
+      "qualname": "register_tools.<locals>.get_capabilities",
+      "wrapper_qualnames": [
+        "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
+      ]
+    },
+    "garmin_mcp.wellness.get_daily_health": {
+      "classification": "READ",
+      "evidence": "service.daily(date)",
+      "line": 399,
+      "qualname": "register_tools.<locals>.get_daily_health",
+      "wrapper_qualnames": [
+        "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
+      ]
+    },
+    "garmin_mcp.wellness.get_health_range": {
+      "classification": "READ",
+      "evidence": "service.daily(day)",
+      "line": 404,
+      "qualname": "register_tools.<locals>.get_health_range",
+      "wrapper_qualnames": [
+        "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
+      ]
+    },
+    "garmin_mcp.wellness.get_hrv": {
+      "classification": "READ",
+      "evidence": "section(date, 'hrv') -> service.daily(day, groups=(group,)) -> fixed reviewed SDK methods",
+      "line": 461,
+      "qualname": "register_tools.<locals>.get_hrv",
+      "wrapper_qualnames": [
+        "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
+      ]
+    },
+    "garmin_mcp.wellness.get_metric_timeseries": {
+      "classification": "READ",
+      "evidence": "service.series(metric, start_date, end_date)",
+      "line": 517,
+      "qualname": "register_tools.<locals>.get_metric_timeseries",
+      "wrapper_qualnames": [
+        "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
+      ]
+    },
+    "garmin_mcp.wellness.get_metric_trend": {
+      "classification": "READ",
+      "evidence": "service.series(metric, start_date, end_date)",
+      "line": 528,
+      "qualname": "register_tools.<locals>.get_metric_trend",
+      "wrapper_qualnames": [
+        "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
+      ]
+    },
+    "garmin_mcp.wellness.get_naps": {
+      "classification": "READ",
+      "evidence": "section(date, 'naps') -> service.daily(day, groups=(group,)) -> fixed reviewed SDK methods",
+      "line": 440,
+      "qualname": "register_tools.<locals>.get_naps",
+      "wrapper_qualnames": [
+        "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
+      ]
+    },
+    "garmin_mcp.wellness.get_profile": {
+      "classification": "READ",
+      "evidence": "Returns configured opaque profile ID and literal display name; no network or writes.",
+      "line": 371,
+      "qualname": "register_tools.<locals>.get_profile",
+      "wrapper_qualnames": [
+        "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
+      ]
+    },
+    "garmin_mcp.wellness.get_recovery_context": {
+      "classification": "READ",
+      "evidence": "service.series(metric, start, today); service.today()",
+      "line": 445,
+      "qualname": "register_tools.<locals>.get_recovery_context",
+      "wrapper_qualnames": [
+        "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
+      ]
+    },
+    "garmin_mcp.wellness.get_sleep": {
+      "classification": "READ",
+      "evidence": "section(date, 'sleep') -> service.daily(day, groups=(group,)) -> fixed reviewed SDK methods",
+      "line": 429,
+      "qualname": "register_tools.<locals>.get_sleep",
+      "wrapper_qualnames": [
+        "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
+      ]
+    },
+    "garmin_mcp.wellness.get_sleep_analysis": {
+      "classification": "READ",
+      "evidence": "service.series(metric, start_date, end_date)",
+      "line": 434,
+      "qualname": "register_tools.<locals>.get_sleep_analysis",
+      "wrapper_qualnames": [
+        "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
+      ]
+    },
+    "garmin_mcp.wellness.get_stress": {
+      "classification": "READ",
+      "evidence": "section(date, 'stress') -> service.daily(day, groups=(group,)) -> fixed reviewed SDK methods",
+      "line": 471,
+      "qualname": "register_tools.<locals>.get_stress",
+      "wrapper_qualnames": [
+        "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
+      ]
+    },
+    "garmin_mcp.wellness.get_training_overview": {
+      "classification": "READ",
+      "evidence": "section(date, 'training') -> service.daily(day, groups=(group,)) -> fixed reviewed SDK methods",
+      "line": 476,
+      "qualname": "register_tools.<locals>.get_training_overview",
+      "wrapper_qualnames": [
+        "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
+      ]
+    },
+    "garmin_mcp.wellness.get_training_readiness": {
+      "classification": "READ",
+      "evidence": "section(date, 'training') -> service.daily(day, groups=(group,)) -> fixed reviewed SDK methods",
+      "line": 481,
+      "qualname": "register_tools.<locals>.get_training_readiness",
+      "wrapper_qualnames": [
+        "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
+      ]
+    },
+    "garmin_mcp.wellness.get_training_status": {
+      "classification": "READ",
+      "evidence": "section(date, 'training') -> service.daily(day, groups=(group,)) -> fixed reviewed SDK methods",
+      "line": 487,
+      "qualname": "register_tools.<locals>.get_training_status",
+      "wrapper_qualnames": [
+        "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
+      ]
+    },
+    "garmin_mcp.wellness.get_vo2max": {
+      "classification": "READ",
+      "evidence": "section(date, 'training') -> service.daily(day, groups=(group,)) -> fixed reviewed SDK methods",
+      "line": 493,
+      "qualname": "register_tools.<locals>.get_vo2max",
+      "wrapper_qualnames": [
+        "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
+      ]
+    },
+    "garmin_mcp.wellness.get_wellness_today": {
+      "classification": "READ",
+      "evidence": "service.call('get_activities', 0, 1); service.daily(day); service.today()",
+      "line": 390,
+      "qualname": "register_tools.<locals>.get_wellness_today",
+      "wrapper_qualnames": [
+        "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
+      ]
+    },
+    "garmin_mcp.womens_health.get_menstrual_calendar_data": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_menstrual_calendar_data(cursor.isoformat(), window_end.isoformat())",
+      "line": 75,
+      "qualname": "register_tools.<locals>.get_menstrual_calendar_data"
+    },
+    "garmin_mcp.womens_health.get_menstrual_data_for_date": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_menstrual_data_for_date(date)",
+      "line": 60,
+      "qualname": "register_tools.<locals>.get_menstrual_data_for_date"
+    },
+    "garmin_mcp.womens_health.get_pregnancy_summary": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_pregnancy_summary()",
+      "line": 49,
+      "qualname": "register_tools.<locals>.get_pregnancy_summary"
+    },
+    "garmin_mcp.workout_builders.create_run_interval_workout": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.upload_workout(workout_json)",
+      "line": 634,
+      "qualname": "register_tools.<locals>.create_run_interval_workout"
+    },
+    "garmin_mcp.workout_builders.create_run_workout": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.upload_workout(workout_json)",
+      "line": 579,
+      "qualname": "register_tools.<locals>.create_run_workout"
+    },
+    "garmin_mcp.workout_builders.create_strength_workout": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.upload_workout(workout_json)",
+      "line": 746,
+      "qualname": "register_tools.<locals>.create_strength_workout"
+    },
+    "garmin_mcp.workout_builders.create_walk_run_workout": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.upload_workout(workout_json)",
+      "line": 531,
+      "qualname": "register_tools.<locals>.create_walk_run_workout"
+    },
+    "garmin_mcp.workout_builders.create_z2_walk_workout": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.upload_workout(workout_json)",
+      "line": 709,
+      "qualname": "register_tools.<locals>.create_z2_walk_workout"
+    },
+    "garmin_mcp.workout_builders.schedule_week": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.client.post('connectapi', url, json={'date': calendar_date})",
+      "line": 786,
+      "qualname": "register_tools.<locals>.schedule_week"
+    },
+    "garmin_mcp.workouts.delete_workout": {
+      "classification": "DESTRUCTIVE",
+      "evidence": "garmin_client.delete_workout(workout_id)",
+      "line": 998,
+      "qualname": "register_tools.<locals>.delete_workout"
+    },
+    "garmin_mcp.workouts.delete_workouts": {
+      "classification": "DESTRUCTIVE",
+      "evidence": "garmin_client.delete_workout(workout_id)",
+      "line": 1025,
+      "qualname": "register_tools.<locals>.delete_workouts"
+    },
+    "garmin_mcp.workouts.download_workout": {
+      "classification": "READ",
+      "evidence": "garmin_client.download_workout(workout_id)",
+      "line": 770,
+      "qualname": "register_tools.<locals>.download_workout"
+    },
+    "garmin_mcp.workouts.get_garmin_coach_workouts": {
+      "classification": "READ",
+      "evidence": "garmin_client.query_garmin_graphql(query)",
+      "line": 1103,
+      "qualname": "register_tools.<locals>.get_garmin_coach_workouts"
+    },
+    "garmin_mcp.workouts.get_scheduled_workouts": {
+      "classification": "READ",
+      "evidence": "garmin_client.query_garmin_graphql(query)",
+      "line": 1061,
+      "qualname": "register_tools.<locals>.get_scheduled_workouts"
+    },
+    "garmin_mcp.workouts.get_training_plan_workouts": {
+      "classification": "READ",
+      "evidence": "garmin_client.query_garmin_graphql(query)",
+      "line": 1137,
+      "qualname": "register_tools.<locals>.get_training_plan_workouts"
+    },
+    "garmin_mcp.workouts.get_workout_by_id": {
+      "classification": "READ",
+      "evidence": "garmin_client.connectapi(url); garmin_client.get_workout_by_id(int(workout_id_str))",
+      "line": 731,
+      "qualname": "register_tools.<locals>.get_workout_by_id"
+    },
+    "garmin_mcp.workouts.get_workouts": {
+      "classification": "READ",
+      "evidence": "garmin_client.get_workouts()",
+      "line": 709,
+      "qualname": "register_tools.<locals>.get_workouts"
+    },
+    "garmin_mcp.workouts.schedule_workout": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.client.post('connectapi', url, json={'date': calendar_date}); garmin_client.query_garmin_graphql(query)",
+      "line": 1159,
+      "qualname": "register_tools.<locals>.schedule_workout"
+    },
+    "garmin_mcp.workouts.schedule_workouts": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.client.post('connectapi', url, json={'date': calendar_date}); garmin_client.query_garmin_graphql(query); garmin_client.upload_workout(workout_data)",
+      "line": 1217,
+      "qualname": "register_tools.<locals>.schedule_workouts"
+    },
+    "garmin_mcp.workouts.unschedule_workout": {
+      "classification": "DESTRUCTIVE",
+      "evidence": "garmin_client.unschedule_workout(scheduled_workout_id)",
+      "line": 1350,
+      "qualname": "register_tools.<locals>.unschedule_workout"
+    },
+    "garmin_mcp.workouts.unschedule_workouts": {
+      "classification": "DESTRUCTIVE",
+      "evidence": "garmin_client.unschedule_workout(scheduled_workout_id)",
+      "line": 1386,
+      "qualname": "register_tools.<locals>.unschedule_workouts"
+    },
+    "garmin_mcp.workouts.upload_workout": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.upload_workout(workout_data)",
+      "line": 796,
+      "qualname": "register_tools.<locals>.upload_workout"
+    },
+    "garmin_mcp.workouts.upload_workouts": {
+      "classification": "WRITE",
+      "evidence": "garmin_client.upload_workout(workout_data)",
+      "line": 935,
+      "qualname": "register_tools.<locals>.upload_workouts"
+    }
+  }
+}

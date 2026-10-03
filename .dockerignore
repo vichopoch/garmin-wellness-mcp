@@ -1,1 +1,9 @@
-.gitignore
+**
+!pyproject.toml
+!uv.lock
+!README.md
+!LICENSE
+!src/
+!src/**
+!scripts/
+!scripts/container-entrypoint.py

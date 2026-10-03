@@ -6,6 +6,15 @@ import garmin_mcp
 from garmin_mcp import _ToolFilter
 
 
+@pytest.fixture(autouse=True)
+def legacy_filter_behavior(monkeypatch):
+    """These synthetic tools exercise legacy name filtering only.
+
+    Production default/read-only policy is separately tested without this flag.
+    """
+    monkeypatch.setenv("GARMIN_READ_ONLY", "false")
+
+
 class FakeApp:
     """Minimal stand-in for FastMCP: records which tools get registered."""
 
