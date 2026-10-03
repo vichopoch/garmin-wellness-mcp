@@ -6,15 +6,28 @@ import json
 import os
 from garmin_mcp.runtime import build_app
 from garmin_mcp.garmin_client import TokenClient
-from garmin_mcp.storage import Store
+from garmin_mcp.storage import Store, tables, activities_records
+from sqlalchemy import select
+from garmin_mcp.wellness import METRICS, number
 from garmin_mcp.observability import configure_private_logging
 
 async def run(recovery=False):
     client=TokenClient()
-    _,app,service=build_app(client=client,store=Store(os.environ['DATABASE_URL']))
+    store=Store(os.environ['DATABASE_URL'])
+    _,app,service=build_app(client=client,store=store)
     today=await service.today()
     yesterday=(date.fromisoformat(today)-timedelta(days=1)).isoformat()
     checks=[('get_profile',{}),('get_daily_health',{'date':yesterday}),('get_sleep',{'date':yesterday}),('get_hrv',{'date':yesterday}),('get_body_battery',{'date':yesterday}),('get_stress',{'date':yesterday}),('get_training_readiness',{'date':yesterday}),('get_training_status',{'date':yesterday}),('get_vo2max',{'date':yesterday}),('get_activities',{'limit':3}),('get_wellness_today',{}),('get_capabilities',{})]
+    with store.engine.connect() as conn:
+        rows=list(conn.execute(select(tables['daily_health'].c.data).where(tables['daily_health'].c.profile_id == service.profile_id)).scalars())
+        activity=conn.execute(select(activities_records.c.activity_id).where(activities_records.c.profile_id == service.profile_id).limit(1)).scalar()
+    metrics={'get_sleep':'sleep_duration','get_hrv':'hrv','get_body_battery':'body_battery','get_stress':'stress','get_training_readiness':'training_readiness','get_vo2max':'vo2max'}
+    for name,args in checks:
+        if name in metrics:
+            group,field,_=METRICS[metrics[name]]
+            dates=[r['date'] for r in rows if number(r.get(group,{}).get(field))]
+            if dates: args['date']=max(dates)
+    if activity: checks.append(('get_activity',{'activity_id':activity}))
     if recovery: checks.append(('get_recovery_context',{'days':30}))
     report={'transport':'operator local tool invocation in Railway container','date':today,'checks':{},'tools_registered':len(await app.list_tools())}
     for name,args in checks:
@@ -22,6 +35,7 @@ async def run(recovery=False):
             output=await app.call_tool(name,args)
             data=output[1] if isinstance(output,tuple) else {}
             summary={'status':'PASS','available':data.get('available')}
+            if 'date' in args:summary['date_used']=args['date']
             if data.get('source_errors'):summary['source_errors']=data['source_errors']
             if data.get('metrics') and name=='get_capabilities':summary['metrics']=data['metrics']
             if 'missing_metrics' in data:summary['missing_metrics']=data['missing_metrics']
