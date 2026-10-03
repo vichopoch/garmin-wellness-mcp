@@ -105,6 +105,31 @@ Un 401 con token exige revisar firma, issuer, audience y expiración. Un 403 exi
 revisar scope y User ID permitido. Un usuario distinto se rechaza aunque su token
 sea válido y contenga `garmin:read`.
 
+### Login correcto, descubrimiento de herramientas fallido
+
+Consulte el evento privado `auth` en Railway. `access_denied` significa que el
+`sub` no coincide con `AUTH0_ALLOWED_SUBJECT`; `insufficient_scope` significa que
+el usuario ya coincidió, pero el token no contiene `garmin:read`. No desactive
+ninguna de las dos comprobaciones para resolver la conexión.
+
+Entrar al panel de administración de Auth0 con Google no determina la identidad
+usada por la aplicación. Un login Google y otro de Username-Password-Authentication
+pueden tener User ID diferentes aunque compartan email. En la pantalla abierta
+por ChatGPT, use la identidad exacta configurada como propietario. Si sólo se
+usará la conexión de email/contraseña, deshabilite Google únicamente en las
+Connections de esta aplicación. Cierre la sesión del tenant antes de reconectar
+para evitar reutilizar otra identidad.
+
+Si falta el scope, compruebe tanto el grant **User-Delegated Access** del cliente
+como el permiso del usuario. Con RBAC activo, Auth0 incluye en `scope` la
+intersección de permisos solicitados y asignados al usuario. En **User Management
+→ Users → propietario → Permissions → Assign Permissions**, asigne `garmin:read`
+de la API Garmin Wellness, o use un rol que lo contenga. El grant del cliente por
+sí solo no sustituye esta asignación. Después desconecte y vuelva a conectar en
+ChatGPT para obtener un token nuevo con el permiso solicitado y consentido.
+Véanse [RBAC en Auth0](https://auth0.com/docs/get-started/apis/enable-role-based-access-control-for-apis)
+y [asignación de permisos](https://auth0.com/docs/manage-users/access-control/configure-core-rbac/rbac-users/assign-permissions-to-users).
+
 ## Privacidad de logs
 
 `configure_private_logging()` emite JSON sólo con evento, nivel, herramienta,
