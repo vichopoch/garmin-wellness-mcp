@@ -120,8 +120,10 @@ usará la conexión de email/contraseña, deshabilite Google únicamente en las
 Connections de esta aplicación. Cierre la sesión del tenant antes de reconectar
 para evitar reutilizar otra identidad.
 
-Si falta el scope, compruebe tanto el grant **User-Delegated Access** del cliente
-como el permiso del usuario. Con RBAC activo, Auth0 incluye en `scope` la
+Si falta el scope, confirme primero que `garmin:read` existe en **Applications
+→ APIs → Garmin Wellness → Permissions**; añádalo allí si no aparece. Compruebe
+después el grant **User-Delegated Access** del cliente. Con RBAC desactivado no
+es necesario asignar el permiso al usuario. Con RBAC activo, Auth0 incluye en `scope` la
 intersección de permisos solicitados y asignados al usuario. En **User Management
 → Users → propietario → Permissions → Assign Permissions**, asigne `garmin:read`
 de la API Garmin Wellness, o use un rol que lo contenga. El grant del cliente por

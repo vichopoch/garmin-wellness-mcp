@@ -6,8 +6,9 @@ All tools declare `readOnlyHint=true`, `destructiveHint=false`, and
 `openWorldHint=false`, return structured JSON, and advertise the `garmin:read`
 OAuth scope. `get_profile` also declares `openai/profile=true`.
 
-**Account availability is unverified until Garmin authentication and real calls
-succeed.** Implemented support is not proof that a particular watch/account
+**Availability is account- and date-dependent.** Real Garmin calls were verified
+on Railway on 2026-10-03; private execution results record which dates and metrics
+were available. Implemented support is not proof that every watch/account
 supplies a measurement. Mock values are test fixtures, never account data.
 
 ## Registered tools
@@ -43,8 +44,8 @@ arguments require ISO `YYYY-MM-DD` strings.
 
 ## Normalized metric mappings
 
-Every availability entry below is **unverified for this account**. The paths are
-implemented extraction paths, not claims that Garmin always returns them.
+The paths below are implemented extraction paths, not claims that Garmin always
+returns them. Consult tool availability and missing-data fields for each date.
 `dailySleepDTO` is abbreviated to `sleepDTO` below.
 
 | Metric / normalized field | SDK source method | Garmin field or transformation | Primary tools |

@@ -33,10 +33,14 @@ estricto. Estos tests no demuestran disponibilidad de métricas de una cuenta re
 
 Auth0 publica PKCE S256 y RFC 9207. La comprobación sin sesión (`prompt=none`)
 devuelve `login_required` después de corregir la autorización de la aplicación;
-aún debe completarse login/consentimiento interactivo y probar un access token
-real. La autenticación Garmin y llamadas reales ya se verificaron desde Railway, incluidos
-tokens persistentes tras redeploy; el informe final documenta el backfill. Un health 200 comprueba el proceso, no el login
-Garmin. Consulte el informe final de ejecución para el estado posterior.
+el flujo interactivo real de ChatGPT quedó verificado el 2026-10-03: conexión
+lista, peticiones autenticadas de `openai-mcp/1.0.0` con respuesta 200 y llamada
+exitosa a `get_profile`. Fue necesario definir `garmin:read` en la API y concederlo
+al cliente en User-Delegated Access, además de usar la identidad exacta autorizada.
+La autenticación Garmin y llamadas reales también se verificaron desde Railway,
+incluidos tokens persistentes tras redeploy; el informe privado de ejecución
+documenta la cobertura del backfill. Un health 200 comprueba el proceso, no el
+login Garmin ni la disponibilidad de todas las métricas en cada fecha.
 
 ## Seguridad y alcance
 
