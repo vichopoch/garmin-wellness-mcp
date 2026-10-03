@@ -193,8 +193,15 @@ actividades tienen ID propio. No se persisten respuestas completas, GPS o email.
 SQLite sirve para desarrollo y tests; PostgreSQL es el almacenamiento de producción.
 
 El sync usa upserts y un advisory lock PostgreSQL contra ejecuciones simultáneas.
-Backfill inicial: 90 días. Después refresca los últimos tres, con un intervalo
-mínimo de una hora. El cache reciente tiene TTL configurable (900 segundos por
+Backfill inicial: 90 días. Después refresca los últimos tres a las **07:00, 15:00
+y 23:00 de America/Santiago**, mediante `GARMIN_SYNC_TIMES` y
+`GARMIN_SYNC_TIMEZONE`. La zona horaria conserva esas horas locales cuando cambia
+el horario de verano. El horario y el último turno se guardan en PostgreSQL
+(`sync_jobs/recent_schedule`) para evitar ejecuciones extra por reinicios; tras
+una interrupción se recupera como máximo el último turno perdido. Si falla una
+ejecución, el siguiente turno vuelve a revisar los últimos tres días. Sin
+`GARMIN_SYNC_TIMES`, se conserva el modo anterior por intervalo mínimo de una hora.
+El cache reciente tiene TTL configurable (900 segundos por
 defecto); histórico completo se reutiliza. La respuesta distingue datos ausentes
 de errores de origen. Un refresh parcial conserva mediciones válidas y su antigüedad.
 
@@ -225,6 +232,9 @@ declara como dato ausente. Las fechas sin mediciones siguen siendo huecos. El
 trabajo respeta el mismo bloqueo de sincronización y la autenticación de sólo
 lectura. `GARMIN_HISTORY_BATCH_DAYS`, `GARMIN_HISTORY_BATCH_SECONDS` y las pausas
 permiten repartir la carga sin bloquear el servidor MCP.
+El backfill pendiente avanza por lotes entre los turnos fijos; una vez completado,
+la actualización queda a cargo de los tres turnos diarios. Las consultas MCP
+pueden efectuar lecturas bajo demanda si el dato no está cacheado o está vencido.
 
 Para consultar progreso sin llamar a Garmin:
 

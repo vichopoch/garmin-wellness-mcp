@@ -1,7 +1,7 @@
 """Incremental cache refresh; an advisory lock prevents overlapping writers."""
 import argparse
 import asyncio
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 import json
 import os
 import time
@@ -73,34 +73,52 @@ async def sync_once(service,store,days=None):
     return report
 
 async def background_sync(service,store,client):
+    from garmin_mcp.sync_schedule import DailySchedule, scheduled_refresh
+    fixed_times = os.getenv('GARMIN_SYNC_TIMES', '').strip()
+    schedule = DailySchedule(fixed_times, os.getenv('GARMIN_SYNC_TIMEZONE', 'America/Santiago')) if fixed_times else None
     interval=max(3600,int(os.getenv('GARMIN_SYNC_INTERVAL_SECONDS','3600')))
     next_recent = 0.0
+    next_history = 0.0
     while True:
         delay = interval
         try:
             if client.ready():
-                if time.monotonic() >= next_recent:
+                if schedule:
+                    await scheduled_refresh(service, store, schedule, sync_once, datetime.now(timezone.utc))
+                    delay = min(60, schedule.delay(datetime.now(timezone.utc)))
+                elif time.monotonic() >= next_recent:
                     await sync_once(service,store)
                     next_recent = time.monotonic() + interval
                 history_start = os.getenv('GARMIN_HISTORY_START_DATE', '').strip()
-                if history_start:
+                if history_start and schedule:
+                    history = await asyncio.to_thread(store.get_sync_job, service.profile_id, 'history')
+                    # A completed initial import does not create extra daily
+                    # runs outside the fixed slots. Recent sync keeps it fresh.
+                    if history and history.get('status') == 'completed' and history.get('start_date') == history_start:
+                        history_start = ''
+                if history_start and (not schedule or time.monotonic() >= next_history):
                     from garmin_mcp.historical_sync import sync_history_batch
                     report = await sync_history_batch(
                         service, store, history_start,
                         max_days=int(os.getenv('GARMIN_HISTORY_BATCH_DAYS', '30')),
-                        max_seconds=float(os.getenv('GARMIN_HISTORY_BATCH_SECONDS', '120')),
+                        max_seconds=min(float(os.getenv('GARMIN_HISTORY_BATCH_SECONDS', '120')),
+                                        max(0.1, schedule.delay(datetime.now(timezone.utc)))) if schedule else float(os.getenv('GARMIN_HISTORY_BATCH_SECONDS', '120')),
                     )
                     if report.get('status') == 'completed':
-                        delay = max(1, next_recent - time.monotonic())
+                        delay = min(60, schedule.delay(datetime.now(timezone.utc))) if schedule else max(1, next_recent - time.monotonic())
                     elif report.get('status') in ('error', 'blocked', 'skipped'):
                         delay = max(300, float(os.getenv('GARMIN_HISTORY_RETRY_SECONDS', '900')))
                     else:
                         delay = max(5, float(os.getenv('GARMIN_HISTORY_BATCH_PAUSE_SECONDS', '10')))
+                    if schedule:
+                        next_history = time.monotonic() + delay
             else:
                 log_event('sync',status='skipped',error_type='GarminTokensMissing')
         except Exception as exc:
             log_event('sync',status='error',error_type=type(exc).__name__)
-        await asyncio.sleep(delay)
+        if schedule:
+            delay = min(delay, 60, schedule.delay(datetime.now(timezone.utc)))
+        await asyncio.sleep(max(0.1, delay))
 
 def main():
     from garmin_mcp.storage import Store,migrate

@@ -9,6 +9,7 @@ from garmin_mcp import sync, historical_sync
 @pytest.mark.asyncio
 @pytest.mark.parametrize('status,expected_delay', [('pending', 10), ('error', 900), ('completed', 3600)])
 async def test_history_background_pacing_and_recent_refresh(monkeypatch, status, expected_delay):
+    monkeypatch.delenv('GARMIN_SYNC_TIMES', raising=False)
     monkeypatch.setenv('GARMIN_HISTORY_START_DATE', '2017-01-01')
     monkeypatch.setenv('GARMIN_SYNC_INTERVAL_SECONDS', '3600')
     monkeypatch.setenv('GARMIN_HISTORY_RETRY_SECONDS', '900')
@@ -31,4 +32,3 @@ async def test_history_background_pacing_and_recent_refresh(monkeypatch, status,
     assert delays == [expected_delay, expected_delay]
     assert recent.await_count == 1
     assert historical.await_count == 2
-
