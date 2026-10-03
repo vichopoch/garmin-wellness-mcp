@@ -13,7 +13,7 @@
     "garmin_mcp.training": "9935560c8395cea6befb86073f30131fd561e78038f7e77d857de424da88e341",
     "garmin_mcp.user_profile": "61d8211d94cd82093fbcaf62a90342f699a60fcc288cdde34579c9dc32582c97",
     "garmin_mcp.weight_management": "684f1f612e9704e1fe9435cadedfd469006f0eef04ea794cce07b22f4b5e69e8",
-    "garmin_mcp.wellness": "c39dcd5d3218084f7e879dd7db4dab7f0433a8f0979025930d4f9c1d203a21fe",
+    "garmin_mcp.wellness": "6e57870fa84f6d5abfed1fabd22fcc3a1b322ec9702cb8fa0aded7af1ac6553a",
     "garmin_mcp.womens_health": "22ab12d7bb1d7b3753715699ba7dea415b651a31f2464e66455eb45a9c774ca2",
     "garmin_mcp.workout_builders": "6fad8386d6ba8bd4391d3d4230bd21802eabcc60b993bf5fcd7d81a19ad99d05",
     "garmin_mcp.workouts": "ed9c764eef5eaa95674cdd9abaa41aec259b243cea728da66d78e0b0bf279f20"
@@ -1343,7 +1343,7 @@
     "garmin_mcp.wellness.compare_periods": {
       "classification": "READ",
       "evidence": "service.series(metric, period_a_start, period_a_end); service.series(metric, period_b_start, period_b_end)",
-      "line": 541,
+      "line": 573,
       "qualname": "register_tools.<locals>.compare_periods",
       "wrapper_qualnames": [
         "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
@@ -1352,7 +1352,7 @@
     "garmin_mcp.wellness.find_correlations": {
       "classification": "READ",
       "evidence": "service.series(metric_x, start_date, end_date); service.series(metric_y, start_date, end_date)",
-      "line": 562,
+      "line": 594,
       "qualname": "register_tools.<locals>.find_correlations",
       "wrapper_qualnames": [
         "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
@@ -1361,7 +1361,7 @@
     "garmin_mcp.wellness.get_activities": {
       "classification": "READ",
       "evidence": "service.call('get_activities', offset, limit)",
-      "line": 499,
+      "line": 531,
       "qualname": "register_tools.<locals>.get_activities",
       "wrapper_qualnames": [
         "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
@@ -1370,7 +1370,7 @@
     "garmin_mcp.wellness.get_activity": {
       "classification": "READ",
       "evidence": "service.call('get_activity', activity_id)",
-      "line": 509,
+      "line": 541,
       "qualname": "register_tools.<locals>.get_activity",
       "wrapper_qualnames": [
         "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
@@ -1379,7 +1379,7 @@
     "garmin_mcp.wellness.get_body_battery": {
       "classification": "READ",
       "evidence": "section(date, 'body_battery') -> service.daily(day, groups=(group,)) -> fixed reviewed SDK methods",
-      "line": 466,
+      "line": 498,
       "qualname": "register_tools.<locals>.get_body_battery",
       "wrapper_qualnames": [
         "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
@@ -1388,7 +1388,7 @@
     "garmin_mcp.wellness.get_capabilities": {
       "classification": "READ",
       "evidence": "service.daily(today); service.daily(yesterday); service.today()",
-      "line": 376,
+      "line": 408,
       "qualname": "register_tools.<locals>.get_capabilities",
       "wrapper_qualnames": [
         "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
@@ -1397,7 +1397,7 @@
     "garmin_mcp.wellness.get_daily_health": {
       "classification": "READ",
       "evidence": "service.daily(date)",
-      "line": 399,
+      "line": 431,
       "qualname": "register_tools.<locals>.get_daily_health",
       "wrapper_qualnames": [
         "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
@@ -1406,8 +1406,20 @@
     "garmin_mcp.wellness.get_health_range": {
       "classification": "READ",
       "evidence": "service.daily(day)",
-      "line": 404,
+      "line": 436,
       "qualname": "register_tools.<locals>.get_health_range",
+      "wrapper_qualnames": [
+        "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
+      ]
+    },
+    "garmin_mcp.wellness.get_history_overview": {
+      "classification": "READ",
+      "dependencies": {
+        "garmin_mcp.history_analytics": "aaaa59f421fe7a287c437bb8784387226d6953a001b7e62b192a6a339e81541c"
+      },
+      "evidence": "asyncio.to_thread(history_overview, store, profile_id, metric_definitions, validated metrics/date bounds); helper issues only profile-bound SELECT queries and store.get_sync_job read; no Garmin calls or synchronization.",
+      "line": 401,
+      "qualname": "register_tools.<locals>.get_history_overview",
       "wrapper_qualnames": [
         "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
       ]
@@ -1415,7 +1427,7 @@
     "garmin_mcp.wellness.get_hrv": {
       "classification": "READ",
       "evidence": "section(date, 'hrv') -> service.daily(day, groups=(group,)) -> fixed reviewed SDK methods",
-      "line": 461,
+      "line": 493,
       "qualname": "register_tools.<locals>.get_hrv",
       "wrapper_qualnames": [
         "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
@@ -1424,7 +1436,7 @@
     "garmin_mcp.wellness.get_metric_timeseries": {
       "classification": "READ",
       "evidence": "service.series(metric, start_date, end_date)",
-      "line": 517,
+      "line": 549,
       "qualname": "register_tools.<locals>.get_metric_timeseries",
       "wrapper_qualnames": [
         "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
@@ -1433,7 +1445,7 @@
     "garmin_mcp.wellness.get_metric_trend": {
       "classification": "READ",
       "evidence": "service.series(metric, start_date, end_date)",
-      "line": 528,
+      "line": 560,
       "qualname": "register_tools.<locals>.get_metric_trend",
       "wrapper_qualnames": [
         "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
@@ -1442,7 +1454,7 @@
     "garmin_mcp.wellness.get_naps": {
       "classification": "READ",
       "evidence": "section(date, 'naps') -> service.daily(day, groups=(group,)) -> fixed reviewed SDK methods",
-      "line": 440,
+      "line": 472,
       "qualname": "register_tools.<locals>.get_naps",
       "wrapper_qualnames": [
         "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
@@ -1451,7 +1463,7 @@
     "garmin_mcp.wellness.get_profile": {
       "classification": "READ",
       "evidence": "Returns configured opaque profile ID and literal display name; no network or writes.",
-      "line": 371,
+      "line": 396,
       "qualname": "register_tools.<locals>.get_profile",
       "wrapper_qualnames": [
         "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
@@ -1460,7 +1472,7 @@
     "garmin_mcp.wellness.get_recovery_context": {
       "classification": "READ",
       "evidence": "service.series(metric, start, today); service.today()",
-      "line": 445,
+      "line": 477,
       "qualname": "register_tools.<locals>.get_recovery_context",
       "wrapper_qualnames": [
         "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
@@ -1469,7 +1481,7 @@
     "garmin_mcp.wellness.get_sleep": {
       "classification": "READ",
       "evidence": "section(date, 'sleep') -> service.daily(day, groups=(group,)) -> fixed reviewed SDK methods",
-      "line": 429,
+      "line": 461,
       "qualname": "register_tools.<locals>.get_sleep",
       "wrapper_qualnames": [
         "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
@@ -1478,7 +1490,7 @@
     "garmin_mcp.wellness.get_sleep_analysis": {
       "classification": "READ",
       "evidence": "service.series(metric, start_date, end_date)",
-      "line": 434,
+      "line": 466,
       "qualname": "register_tools.<locals>.get_sleep_analysis",
       "wrapper_qualnames": [
         "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
@@ -1487,7 +1499,7 @@
     "garmin_mcp.wellness.get_stress": {
       "classification": "READ",
       "evidence": "section(date, 'stress') -> service.daily(day, groups=(group,)) -> fixed reviewed SDK methods",
-      "line": 471,
+      "line": 503,
       "qualname": "register_tools.<locals>.get_stress",
       "wrapper_qualnames": [
         "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
@@ -1496,7 +1508,7 @@
     "garmin_mcp.wellness.get_training_overview": {
       "classification": "READ",
       "evidence": "section(date, 'training') -> service.daily(day, groups=(group,)) -> fixed reviewed SDK methods",
-      "line": 476,
+      "line": 508,
       "qualname": "register_tools.<locals>.get_training_overview",
       "wrapper_qualnames": [
         "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
@@ -1505,7 +1517,7 @@
     "garmin_mcp.wellness.get_training_readiness": {
       "classification": "READ",
       "evidence": "section(date, 'training') -> service.daily(day, groups=(group,)) -> fixed reviewed SDK methods",
-      "line": 481,
+      "line": 513,
       "qualname": "register_tools.<locals>.get_training_readiness",
       "wrapper_qualnames": [
         "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
@@ -1514,7 +1526,7 @@
     "garmin_mcp.wellness.get_training_status": {
       "classification": "READ",
       "evidence": "section(date, 'training') -> service.daily(day, groups=(group,)) -> fixed reviewed SDK methods",
-      "line": 487,
+      "line": 519,
       "qualname": "register_tools.<locals>.get_training_status",
       "wrapper_qualnames": [
         "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
@@ -1523,7 +1535,7 @@
     "garmin_mcp.wellness.get_vo2max": {
       "classification": "READ",
       "evidence": "section(date, 'training') -> service.daily(day, groups=(group,)) -> fixed reviewed SDK methods",
-      "line": 493,
+      "line": 525,
       "qualname": "register_tools.<locals>.get_vo2max",
       "wrapper_qualnames": [
         "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"
@@ -1532,7 +1544,7 @@
     "garmin_mcp.wellness.get_wellness_today": {
       "classification": "READ",
       "evidence": "service.call('get_activities', 0, 1); service.daily(day); service.today()",
-      "line": 390,
+      "line": 422,
       "qualname": "register_tools.<locals>.get_wellness_today",
       "wrapper_qualnames": [
         "register_tools.<locals>.tool.<locals>.decorate.<locals>.bounded"

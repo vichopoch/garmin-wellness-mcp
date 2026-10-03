@@ -54,13 +54,13 @@ def main():
                 raise RuntimeError(f"Inspector tool error: {name}")
             results[name] = result
         assert results["initialize"]["serverInfo"]["name"] == "Garmin Wellness"
-        assert len(results["tools/list"]["tools"]) == 22
+        assert len(results["tools/list"]["tools"]) == 23
         assert results["get_profile"]["structuredContent"]["id"] == "garmin-profile-integration-fixture"
         assert results["get_sleep"]["structuredContent"]["sleep_score"] == 85
         assert results["get_hrv"]["structuredContent"]["nightly_avg"] == 55
         assert results["get_wellness_today"]["structuredContent"]["health"]["steps"] == 4321
         print(json.dumps({"inspector": INSPECTOR_VERSION, "transport": "streamable-http", "status": "PASS",
-                          "checks": list(results), "tools": 22, "data_source": "synthetic Garmin",
+                          "checks": list(results), "tools": 23, "data_source": "synthetic Garmin",
                           "authorization": "ephemeral RS256 JWT through production verifier"}))
     return 0
 

@@ -4,6 +4,7 @@ import asyncio
 from datetime import date, timedelta
 import json
 import os
+import time
 from garmin_mcp.observability import configure_private_logging, log_event
 
 async def sync_once(service,store,days=None):
@@ -73,15 +74,33 @@ async def sync_once(service,store,days=None):
 
 async def background_sync(service,store,client):
     interval=max(3600,int(os.getenv('GARMIN_SYNC_INTERVAL_SECONDS','3600')))
+    next_recent = 0.0
     while True:
+        delay = interval
         try:
             if client.ready():
-                await sync_once(service,store)
+                if time.monotonic() >= next_recent:
+                    await sync_once(service,store)
+                    next_recent = time.monotonic() + interval
+                history_start = os.getenv('GARMIN_HISTORY_START_DATE', '').strip()
+                if history_start:
+                    from garmin_mcp.historical_sync import sync_history_batch
+                    report = await sync_history_batch(
+                        service, store, history_start,
+                        max_days=int(os.getenv('GARMIN_HISTORY_BATCH_DAYS', '30')),
+                        max_seconds=float(os.getenv('GARMIN_HISTORY_BATCH_SECONDS', '120')),
+                    )
+                    if report.get('status') == 'completed':
+                        delay = max(1, next_recent - time.monotonic())
+                    elif report.get('status') in ('error', 'blocked', 'skipped'):
+                        delay = max(300, float(os.getenv('GARMIN_HISTORY_RETRY_SECONDS', '900')))
+                    else:
+                        delay = max(5, float(os.getenv('GARMIN_HISTORY_BATCH_PAUSE_SECONDS', '10')))
             else:
                 log_event('sync',status='skipped',error_type='GarminTokensMissing')
         except Exception as exc:
             log_event('sync',status='error',error_type=type(exc).__name__)
-        await asyncio.sleep(interval)
+        await asyncio.sleep(delay)
 
 def main():
     from garmin_mcp.storage import Store,migrate
@@ -91,14 +110,25 @@ def main():
     configure_private_logging()
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--days',type=int)
+    parser.add_argument('--history-start', help='Resume one historical batch from this ISO date; no 365-day limit')
+    parser.add_argument('--history-status', action='store_true', help='Show saved historical progress without Garmin calls')
+    parser.add_argument('--batch-days', type=int, default=30)
     args=parser.parse_args()
     url=os.environ['DATABASE_URL']; migrate(url)
     client=TokenClient()
+    store=Store(url)
+    identifier=profile_id(client.token_path)
+    if args.history_status:
+        print(json.dumps(store.get_sync_job(identifier, 'history') or {'status':'not_started'}))
+        return
     if not client.ready():
         print(json.dumps({'status':'error','reason':'Garmin tokens missing','attempted_days':0}))
         raise SystemExit(1)
-    store=Store(url)
-    service=WellnessService(client,store=store,timezone=os.getenv('GARMIN_TIMEZONE','America/Santiago'),profile_id=profile_id(client.token_path))
-    report=asyncio.run(sync_once(service,store,args.days))
+    service=WellnessService(client,store=store,timezone=os.getenv('GARMIN_TIMEZONE','America/Santiago'),profile_id=identifier)
+    if args.history_start:
+        from garmin_mcp.historical_sync import sync_history_batch
+        report=asyncio.run(sync_history_batch(service,store,args.history_start,max_days=args.batch_days))
+    else:
+        report=asyncio.run(sync_once(service,store,args.days))
     print(json.dumps(report))
-    if report.get('errors'): raise SystemExit(1)
+    if report.get('errors') or report.get('status') == 'error': raise SystemExit(1)

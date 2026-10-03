@@ -328,7 +328,7 @@ Full implementation evidence and source fingerprints live in `src/garmin_mcp/rea
 
 ## Wellness production toolset
 
-Additional 22 handlers are READ. Each delegates to `WellnessService` with a fixed source-method allowlist: `get_stats`, `get_sleep_data`, `get_hrv_data`, `get_body_battery`, `get_stress_data`, `get_training_readiness`, `get_training_status`, `get_max_metrics`, `get_spo2_data`, `get_respiration_data`, `get_user_profile`, `get_activities`, `get_activity`. These SDK methods are included in the reviewed GET table above. No tool accepts a method name or arbitrary URL. The bounded-call decorator installs/resets a context-local call budget and emits only static tool name, generated request ID, duration, status and exception type through the safe structured logger; its exact wrapper qualified name is separately authorized and source-fingerprinted. Unreviewed wrappers are rejected, even if `functools.wraps` copies a reviewed name.
+Additional 23 handlers are READ. Each delegates to `WellnessService` with a fixed source-method allowlist: `get_stats`, `get_sleep_data`, `get_hrv_data`, `get_body_battery`, `get_stress_data`, `get_training_readiness`, `get_training_status`, `get_max_metrics`, `get_spo2_data`, `get_respiration_data`, `get_user_profile`, `get_activities`, `get_activity`. These SDK methods are included in the reviewed GET table above. No tool accepts a method name or arbitrary URL. The bounded-call decorator installs/resets a context-local call budget and emits only static tool name, generated request ID, duration, status and exception type through the safe structured logger; its exact wrapper qualified name is separately authorized and source-fingerprinted. Unreviewed wrappers are rejected, even if `functools.wraps` copies a reviewed name.
 
 `daily()` may persist curated scalars using the internally configured store. This is an operational normalized cache, not an exposed arbitrary write interface or a Garmin mutation. No tool can invoke sync, migration, authentication, deletion, token dump, arbitrary SQL or file writes. Production `TokenClient` adds its own narrower read-method boundary.
 
@@ -356,3 +356,10 @@ Additional 22 handlers are READ. Each delegates to `WellnessService` with a fixe
 | `get_metric_trend` | READ | `service.series(metric, start_date, end_date)` |
 | `compare_periods` | READ | `service.series(metric, period_a_start, period_a_end); service.series(metric, period_b_start, period_b_end)` |
 | `find_correlations` | READ | `service.series(metric_x, start_date, end_date); service.series(metric_y, start_date, end_date)` |
+
+
+## Cached lifetime history reader (normalization v2)
+
+`get_history_overview` is READ. Its reviewed `history_analytics` dependency uses parameter-bound SELECTs on the current profile's cache and read-only `get_sync_job` progress. It streams daily rows, returns at most 400 monthly buckets, defaults to three selected metrics, excludes pre-v2 normalization and stale/failed-source values, and never calls Garmin or starts synchronization. The imported helper has its own source fingerprint in this tool's review entry; changing it denies registration even if the wrapper is unchanged. Coverage describes observed cache bounds, never proof of first Garmin use or a completed lifetime import.
+
+Wellness normalization v2 discards default wellness fields when Garmin explicitly reports includesWellnessData=false, preserving activity distance/calories only if includesActivityData=true. Genuine zero measurements remain valid when wellness is present; absent flags retain compatibility. Explicit future-dated readiness, training and VO2 snapshots are excluded. These operations are in-memory projections and do not change READ classification.

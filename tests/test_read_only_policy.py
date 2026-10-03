@@ -134,7 +134,7 @@ def test_all_production_wellness_handlers_are_registered_and_read_only(monkeypat
     app = Registry()
     register_tools(_ToolFilter(app, set(), set()), WellnessService(object()))
     expected = {key.rsplit('.', 1)[1] for key in read_only.TOOL_AUDIT if key.startswith('garmin_mcp.wellness.')}
-    assert len(expected) == 22
+    assert len(expected) == 23
     assert {fn.__name__ for fn in app.functions} == expected
     assert all(read_only.classify_tool(fn) == read_only.Classification.READ for fn in app.functions)
 
@@ -146,3 +146,14 @@ def test_unreviewed_wrapper_cannot_borrow_reviewed_identity():
     def wrapper(*args, **kwargs):
         return 'unreviewed additional effect'
     assert read_only.classify_tool(wrapper) == read_only.Classification.UNKNOWN
+
+
+def test_imported_history_helper_drift_is_denied(monkeypatch):
+    from garmin_mcp.wellness import WellnessService, register_tools
+    registry = Registry()
+    register_tools(registry, WellnessService(object()))
+    handler = next(fn for fn in registry.functions if fn.__name__ == 'get_history_overview')
+    assert read_only.classify_tool(handler) == read_only.Classification.READ
+    dependencies = read_only._MANIFEST['tools']['garmin_mcp.wellness.get_history_overview']['dependencies']
+    monkeypatch.setitem(dependencies, 'garmin_mcp.history_analytics', 'changed source')
+    assert read_only.classify_tool(handler) == read_only.Classification.UNKNOWN

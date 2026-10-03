@@ -88,6 +88,13 @@ def classify_tool(fn: Callable) -> Classification:
             return Classification.UNKNOWN
         if hashlib.sha256(path.read_bytes()).hexdigest() != _MANIFEST["modules"].get(module_name):
             return Classification.UNKNOWN
+        # A reviewed handler may delegate into another local module. Pin that
+        # helper implementation too, so changing an imported helper cannot
+        # silently add side effects while the handler's source remains intact.
+        for dependency, digest in record.get("dependencies", {}).items():
+            helper = importlib.import_module(dependency)
+            if hashlib.sha256(Path(helper.__file__).read_bytes()).hexdigest() != digest:
+                return Classification.UNKNOWN
         if not sdk_is_reviewed():
             return Classification.UNKNOWN
     except (OSError, TypeError, AttributeError, ImportError):

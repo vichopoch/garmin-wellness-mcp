@@ -1,6 +1,6 @@
 # Wellness tools and data contract
 
-The `wellness` profile registers exactly 22 tools. The implementation is in
+The `wellness` profile registers exactly 23 tools. The implementation is in
 `src/garmin_mcp/wellness.py`; contract tests are in `tests/test_wellness_tools.py`.
 All tools declare `readOnlyHint=true`, `destructiveHint=false`, and
 `openWorldHint=false`, return structured JSON, and advertise the `garmin:read`
@@ -16,6 +16,7 @@ supplies a measurement. Mock values are test fixtures, never account data.
 | Tool | Purpose and bounds |
 | --- | --- |
 | `get_profile` | Stable configured opaque profile ID and fixed display name; no Garmin email |
+| `get_history_overview` | Cached multi-year coverage, import progress and monthly means/medians; up to 400 months, 1–13 metrics |
 | `get_capabilities` | Metrics observed today/yesterday; false means not observed, not unsupported |
 | `get_wellness_today` | Full compact daily summary and one latest activity summary |
 | `get_daily_health` | One ISO date: health, sleep, HRV, Body Battery, stress, training, naps |
@@ -193,8 +194,39 @@ and exception messages are never included. Partial upstream failures use status
   preferred device when multiple records share the same date.
 - Skin-temperature and sleep-need fields are returned only when their implemented
   response paths exist; no extra endpoint is queried to infer them.
-- Historical sync requests 90 days of daily summaries. Activity persistence is a
-  snapshot of the latest 100 activities, not a complete 90-day activity history.
+- Normal incremental sync requests a recent daily window and a snapshot of the
+  latest 100 activities. Explicit historical import resumes from its configured
+  start date and paginates the full activity list; inspect its checkpoint before
+  claiming completeness. Cache boundaries do not prove first Garmin use.
 - Daily activity load/late-activity time are not analytics metrics; correlations
   involving late activity are not currently supported.
 - No GPS tracks are persisted or returned. There is no Garmin mutation tool.
+
+## Multi-year history overview and normalization version
+
+`get_history_overview(metrics=None, start_date=None, end_date=None)` reads only
+normalized PostgreSQL rows and `get_sync_job(profile_id, "history")`. It does not
+call Garmin, start a sync, or modify checkpoints. The default monthly metrics are
+`sleep_score`, `hrv`, and `resting_hr`; request up to 13 distinct metric names to
+change the selection. Omitted date bounds use the earliest/latest cached rows
+for the authenticated profile. Both explicit and inferred ranges are bounded to
+400 calendar months. SQL binds the profile and optional date range, and rows are
+streamed in batches instead of materializing raw payload history.
+
+The result reports cached/uncached calendar days, first/last cached dates,
+per-metric first/last valid observation, valid and missing counts, monthly means
+and medians, source-error day counts and excluded stale/legacy counts. Missing
+months are represented with null means and zero observations, not zero-valued
+measurements. Import progress projects only allowlisted dates, counts, booleans,
+status and finite error codes; no checkpoint payload or raw exception is exposed.
+
+Normalization version **2** excludes default-filled wellness fields when
+`includesWellnessData` is explicitly false. Only activity distance and active
+calories are retained when `includesActivityData` is explicitly true; food-only
+logging does not establish wellness observations. Missing flags preserve
+compatibility with older response shapes. A false activity flag
+alone does not discard wellness readings or genuine zero steps. Independently
+returned sleep/HRV/Body Battery measurements are not erased by an empty daily
+summary. Explicit future-dated training/readiness/VO2 snapshots are excluded from
+older requested dates. Legacy rows are refreshed by daily queries and excluded
+from multi-year analytics until regenerated, with `legacy_days_excluded` reported.

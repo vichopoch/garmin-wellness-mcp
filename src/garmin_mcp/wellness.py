@@ -22,7 +22,9 @@ from uuid import uuid4
 from mcp.types import ToolAnnotations
 
 from .observability import log_event
+from .history_analytics import history_overview
 
+NORMALIZATION_VERSION = 2
 MAX_DAYS = 365
 MAX_POINTS = 2000
 _CALL_BUDGET: ContextVar[list[int] | None] = ContextVar('wellness_call_budget', default=None)
@@ -91,6 +93,21 @@ def first_record(payload: Any) -> dict[str, Any]:
     return as_dict(payload)
 
 
+
+def dated_record(payload: Any, day: str) -> dict[str, Any]:
+    """Ignore explicit future-dated Garmin 'most recent' snapshots."""
+    records = payload if isinstance(payload, list) else [payload]
+    eligible = []
+    for value in records:
+        value = as_dict(value)
+        explicit_date = value.get('calendarDate') or value.get('timestampLocal') or value.get('timestamp')
+        if isinstance(explicit_date, str) and re.match(r'^\d{4}-\d{2}-\d{2}', explicit_date):
+            if explicit_date[:10] > day:
+                continue
+        eligible.append(value)
+    return first_record(eligible)
+
+
 def iso_timestamp(milliseconds: Any) -> str | None:
     if not number(milliseconds):
         return None
@@ -104,6 +121,13 @@ def normalize(day: str, payloads: dict, errors: dict | None = None) -> dict[str,
     """Normalize supported Garmin response variants without synthesizing measurements."""
     errors = errors or {}
     h = as_dict(payloads.get('health'))
+    # Garmin may return default-filled wellness fields even on activity-only
+    # or food-only days. Preserve activity distance/calories only when explicitly
+    # present, and never treat its zero steps/HR as wellness observations. Absent
+    # flags retain compatibility; activity=false alone is normal on rest days.
+    if h.get('includesWellnessData') is False:
+        h = ({key: h[key] for key in ('totalDistanceMeters', 'activeKilocalories') if key in h}
+             if h.get('includesActivityData') is True else {})
     raw_sleep = as_dict(payloads.get('sleep'))
     s = as_dict(raw_sleep.get('dailySleepDTO'))
     score = as_dict(as_dict(s.get('sleepScores')).get('overall'))
@@ -147,14 +171,15 @@ def normalize(day: str, payloads: dict, errors: dict | None = None) -> dict[str,
                             high_seconds=pick(h, 'highStressDuration'))
     if 'average' not in stress_values and pick(h, 'averageStressLevel') is not None:
         stress_values['average'] = pick(h, 'averageStressLevel')
-    ready = first_record(payloads.get('readiness'))
-    status = as_dict(payloads.get('status'))
-    devices = as_dict(as_dict(status.get('mostRecentTrainingStatus')).get('latestTrainingStatusData'))
-    device = first_record(list(devices.values()))
-    load = as_dict(device.get('acuteTrainingLoadDTO'))
-    vo2 = first_record(payloads.get('vo2max'))
-    generic = as_dict(vo2.get('generic')) or as_dict(as_dict(status.get('mostRecentVO2Max')).get('generic'))
-    cycling = as_dict(vo2.get('cycling')) or as_dict(as_dict(status.get('mostRecentVO2Max')).get('cycling'))
+    ready = dated_record(payloads.get('readiness'), day)
+    status = dated_record(payloads.get('status'), day)
+    devices = as_dict(dated_record(status.get('mostRecentTrainingStatus'), day).get('latestTrainingStatusData'))
+    device = dated_record(list(devices.values()), day)
+    load = dated_record(device.get('acuteTrainingLoadDTO'), day)
+    vo2 = dated_record(payloads.get('vo2max'), day)
+    recent_vo2 = dated_record(status.get('mostRecentVO2Max'), day)
+    generic = dated_record(vo2.get('generic'), day) or dated_record(recent_vo2.get('generic'), day)
+    cycling = dated_record(vo2.get('cycling'), day) or dated_record(recent_vo2.get('cycling'), day)
     training = compact(readiness=pick(ready, 'score', 'readinessScore'), training_status=pick(device, 'trainingStatus'),
                         acute_load=pick(load, 'dailyTrainingLoadAcute'), chronic_load=pick(load, 'dailyTrainingLoadChronic'),
                         load_ratio=pick(load, 'dailyAcuteChronicWorkloadRatio'),
@@ -173,7 +198,7 @@ def normalize(day: str, payloads: dict, errors: dict | None = None) -> dict[str,
     if 'intensity_minutes' not in health and number(h.get('moderateIntensityMinutes')) and number(h.get('vigorousIntensityMinutes')):
         health['intensity_minutes'] = h['moderateIntensityMinutes'] + 2 * h['vigorousIntensityMinutes']
     naps = compact(total_seconds=pick(s, 'napTimeSeconds'))
-    result = {'date': day}
+    result = {'date': day, 'normalization_version': NORMALIZATION_VERSION}
     for name, values in [('health', health), ('sleep', sleep), ('hrv', hrv_values), ('body_battery', body),
                          ('stress', stress_values), ('training', training), ('naps', naps)]:
         result[name] = measured(values, [errors[source] for source in GROUP_SOURCES[name] if source in errors])
@@ -299,7 +324,7 @@ class WellnessService:
         date_range(date, date)
         if not refresh and self.store is not None:
             cached = await asyncio.to_thread(self.store.get_day, self.profile_id, date)
-            if cached is not None:
+            if cached is not None and cached.get('normalization_version') == NORMALIZATION_VERSION:
                 return cached
         sources = set(SOURCE_METHODS) if groups is None else {source for group in groups for source in GROUP_SOURCES[group]}
         if refresh:
@@ -371,6 +396,13 @@ def register_tools(app: Any, service: WellnessService) -> Any:
     async def get_profile() -> dict[str, Any]:
         """Return the authenticated personal Garmin profile's stable opaque ID. Contains no email."""
         return {'id': service.profile_id, 'name': 'Garmin Wellness'}
+
+    @tool()
+    async def get_history_overview(metrics: list[str] | None = None, start_date: str | None = None,
+                                   end_date: str | None = None) -> dict[str, Any]:
+        """Read cached history coverage, import progress and monthly mean/median evolution for 1–13 metrics, across up to 400 months. Makes no Garmin calls and does not start sync. Cache bounds are observed availability, not proof of complete lifetime history. Missing/stale data remain excluded."""
+        return await asyncio.to_thread(history_overview, service.store, service.profile_id, METRICS,
+                                       metrics, start_date, end_date)
 
     @tool()
     async def get_capabilities() -> dict[str, Any]:

@@ -3,7 +3,7 @@
 MCP personal de lectura para consultar sueño, recuperación, salud y entrenamiento
 Garmin desde ChatGPT. Conserva FastMCP y los adaptadores de
 [Taxuspt/garmin_mcp](https://github.com/Taxuspt/garmin_mcp), con OAuth obligatorio,
-22 herramientas Wellness, almacenamiento normalizado y deployment en Railway.
+23 herramientas Wellness, almacenamiento normalizado y deployment en Railway.
 
 ```text
 ChatGPT → OAuth Auth0 → HTTPS /mcp en Railway → Garmin Connect → reloj Garmin
@@ -187,7 +187,7 @@ cuando `DATABASE_URL` está definido. Si una migración falla, el servidor no in
 ## PostgreSQL, cache y sync
 
 SQLAlchemy/Alembic mantienen `profiles`, `daily_health`, `sleep`, `hrv`,
-`body_battery`, `training`, `activities`, `activities_records` y `sync_state`.
+`body_battery`, `training`, `activities`, `activities_records`, `sync_state` y `sync_jobs`.
 Las mediciones se guardan como proyecciones JSON normalizadas por perfil/fecha;
 actividades tienen ID propio. No se persisten respuestas completas, GPS o email.
 SQLite sirve para desarrollo y tests; PostgreSQL es el almacenamiento de producción.
@@ -211,7 +211,38 @@ interactivas tienen un máximo de 60 lecturas no cacheadas; para rangos largos u
 el histórico importado. Garmin tiene máximo tres intentos y backoff; `Retry-After`
 se respeta sin mantener una llamada MCP abierta indefinidamente.
 
-## Las 22 herramientas Wellness
+### Historial completo y reanudable
+
+`GARMIN_HISTORY_START_DATE=YYYY-MM-DD` habilita la importación histórica desde
+una fecha inclusiva, además del refresco reciente. Recorre todas las fechas sin
+el límite de 365 días de las consultas interactivas y pagina las actividades
+hasta agotar la respuesta. La primera actividad no demuestra por sí sola el
+inicio de los datos de salud; verifique también la cobertura previa.
+
+Cada fecha y página completada conserva su cursor en PostgreSQL. Un reinicio
+reanuda el trabajo; un error de origen conserva el cursor para reintentar y no se
+declara como dato ausente. Las fechas sin mediciones siguen siendo huecos. El
+trabajo respeta el mismo bloqueo de sincronización y la autenticación de sólo
+lectura. `GARMIN_HISTORY_BATCH_DAYS`, `GARMIN_HISTORY_BATCH_SECONDS` y las pausas
+permiten repartir la carga sin bloquear el servidor MCP.
+
+Para consultar progreso sin llamar a Garmin:
+
+```sh
+garmin-sync --history-status
+```
+
+Para ejecutar un lote manual con los mismos checkpoints:
+
+```sh
+garmin-sync --history-start YYYY-MM-DD --batch-days 30
+```
+
+`get_history_overview` permite consultar desde ChatGPT la cobertura importada,
+el progreso y las medias mensuales de las métricas disponibles. Usa únicamente
+PostgreSQL; no lanza miles de llamadas a Garmin desde una consulta interactiva.
+
+## Las 23 herramientas Wellness
 
 | Grupo | Herramientas |
 | --- | --- |
@@ -221,7 +252,7 @@ se respeta sin mantener una llamada MCP abierta indefinidamente.
 | Recuperación | `get_recovery_context`, `get_hrv`, `get_body_battery`, `get_stress` |
 | Entrenamiento | `get_training_overview`, `get_training_readiness`, `get_training_status`, `get_vo2max` |
 | Actividades | `get_activities`, `get_activity` |
-| Analytics | `get_metric_trend`, `compare_periods`, `get_metric_timeseries`, `find_correlations` |
+| Analytics | `get_history_overview`, `get_metric_trend`, `compare_periods`, `get_metric_timeseries`, `find_correlations` |
 
 Todas declaran readOnly, no destructivas, mundo cerrado, scope OAuth y salida
 estructurada. `get_profile` no requiere argumentos; usa un ID aleatorio persistido
@@ -230,7 +261,7 @@ en el volume y metadata `openai/profile=true`.
 Fechas ISO `YYYY-MM-DD`, timezone de la cuenta cuando está disponible y fallback
 `GARMIN_TIMEZONE=America/Santiago`. Unidades: segundos, metros, bpm, ms y °C según
 métrica. Las series son diarias, máximo 365 días/2000 puntos; resúmenes completos,
-31 días. Recovery usa mediana; comparaciones incluyen n y días faltantes;
+31 días. `get_history_overview` consulta sólo cache, hasta 400 meses, y admite hasta 13 métricas; por defecto resume sueño, HRV y pulso en reposo. Recovery usa mediana; comparaciones incluyen n y días faltantes;
 correlaciones no implican causalidad.
 
 El [contrato de métricas](docs/wellness-metrics.md) detalla campos, métodos SDK,
@@ -260,7 +291,7 @@ consultada el 2026-10-03:
    indicado en la conexión; para el tenant actual es
    `https://chatgpt.com/connector_platform_oauth_redirect`.
 5. Cree la conexión, inicie sesión en Auth0 como el propietario autorizado y
-   acepte `garmin:read`. Revise que aparezcan las 22 herramientas.
+   acepte `garmin:read`. Revise que aparezcan las 23 herramientas.
 6. Abra una conversación nueva y añada la conexión desde el menú de herramientas.
    Tras cambiar herramientas o metadata, abra la conexión y use **Refresh**.
 

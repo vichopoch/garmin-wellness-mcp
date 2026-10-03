@@ -126,9 +126,9 @@ async def test_all_registered_tools_are_readonly_with_output_schemas():
     app = FastMCP('wellness-test')
     register_tools(app, WellnessService(FakeGarmin()))
     definitions = await app.list_tools()
-    assert len(definitions) == 22
+    assert len(definitions) == 23
     assert {tool.name for tool in definitions} == {
-        'get_profile', 'get_capabilities', 'get_wellness_today', 'get_daily_health', 'get_health_range',
+        'get_profile', 'get_history_overview', 'get_capabilities', 'get_wellness_today', 'get_daily_health', 'get_health_range',
         'get_sleep', 'get_sleep_analysis', 'get_naps', 'get_recovery_context', 'get_hrv', 'get_body_battery',
         'get_stress', 'get_training_overview', 'get_training_readiness', 'get_training_status', 'get_vo2max',
         'get_activities', 'get_activity', 'get_metric_trend', 'compare_periods', 'get_metric_timeseries', 'find_correlations',
@@ -365,3 +365,72 @@ async def test_stale_sections_preserve_metadata_and_analytics_exclude_retained_v
     assert series['points'][0]['stale_sources']['hrv']['last_success_at'] == timestamp
     assert series['sample_count'] == 0
     assert series['missing_days'] == 1
+
+
+def test_empty_default_summary_flags_do_not_fabricate_zero_measurements():
+    defaults = {'includesWellnessData': False, 'includesActivityData': False,
+                'includesCalorieConsumedData': False, 'totalSteps': 0,
+                'totalDistanceMeters': 0, 'activeKilocalories': 0, 'restingHeartRate': 0,
+                'bodyBatteryHighestValue': 0, 'averageStressLevel': 0,
+                'moderateIntensityMinutes': 0, 'vigorousIntensityMinutes': 0}
+    record = normalize('2010-01-01', {'health': defaults, 'hrv': MOCK_HRV_DATA})
+    assert record['health']['available'] is False
+    assert record['body_battery']['available'] is False
+    assert record['stress']['available'] is False
+    assert record['hrv']['nightly_avg'] == 48  # Independent source not suppressed.
+    assert record['normalization_version'] == 2
+    defaults['includesWellnessData'] = True
+    record = normalize('2018-01-01', {'health': defaults})
+    assert record['health']['steps'] == 0
+    assert record['health']['intensity_minutes'] == 0
+
+
+def test_future_training_snapshots_are_excluded_and_past_snapshot_selected():
+    record = normalize('2020-01-01', {
+        'readiness': [{'calendarDate': '2026-01-01', 'score': 90}],
+        'status': {
+            'mostRecentTrainingStatus': {'latestTrainingStatusData': {
+                'future': {'calendarDate': '2026-01-01', 'trainingStatus': 'FUTURE'},
+                'past': {'calendarDate': '2019-12-31', 'trainingStatus': 'PAST',
+                         'acuteTrainingLoadDTO': {'calendarDate': '2026-01-01', 'dailyTrainingLoadAcute': 99}},
+            }},
+            'mostRecentVO2Max': {'generic': {'calendarDate': '2026-01-01', 'vo2MaxValue': 99}},
+        },
+        'vo2max': [{'calendarDate': '2026-01-01', 'generic': {'vo2MaxValue': 99}}],
+    })
+    assert record['training']['training_status'] == 'PAST'
+    assert 'readiness' not in record['training']
+    assert 'acute_load' not in record['training']
+    assert 'vo2max' not in record['training']
+
+
+@pytest.mark.asyncio
+async def test_old_normalization_cache_is_refetched():
+    store = Mock()
+    store.get_day.return_value = {'date': '2010-01-01', 'health': {'steps': 0}, 'normalization_version': 1}
+    client = FakeGarmin()
+    result = await WellnessService(client, store).daily('2010-01-01')
+    assert client.calls
+    assert result['normalization_version'] == 2
+    store.put_day.assert_called_once()
+
+
+@pytest.mark.parametrize('activity,food', [(True, False), (False, True), (False, False)])
+def test_nonwellness_days_keep_only_explicit_activity_totals(activity, food):
+    health = {'includesWellnessData': False, 'includesActivityData': activity,
+              'includesCalorieConsumedData': food, 'totalSteps': 0,
+              'restingHeartRate': 0, 'bodyBatteryHighestValue': 0,
+              'averageStressLevel': 0, 'moderateIntensityMinutes': 0,
+              'vigorousIntensityMinutes': 0, 'totalDistanceMeters': 1000,
+              'activeKilocalories': 100}
+    record = normalize('2020-01-01', {'health': health})
+    assert 'steps' not in record['health']
+    assert 'resting_hr' not in record['health']
+    assert 'intensity_minutes' not in record['health']
+    assert record['stress']['available'] is False
+    assert record['body_battery']['available'] is False
+    if activity:
+        assert record['health']['distance_meters'] == 1000
+        assert record['health']['active_calories'] == 100
+    else:
+        assert record['health']['available'] is False

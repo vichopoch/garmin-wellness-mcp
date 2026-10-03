@@ -13,7 +13,7 @@ EXPECTED_TOOLS = {
     "get_sleep", "get_sleep_analysis", "get_naps", "get_recovery_context", "get_hrv",
     "get_body_battery", "get_stress", "get_training_overview", "get_training_readiness",
     "get_training_status", "get_vo2max", "get_activities", "get_activity", "get_metric_trend",
-    "compare_periods", "get_metric_timeseries", "find_correlations",
+    "compare_periods", "get_metric_timeseries", "find_correlations", "get_history_overview",
 }
 
 
@@ -48,7 +48,7 @@ def test_initialize_and_schema_contract(runtime):
     assert result["serverInfo"]["name"] == "Garmin Wellness"
     tools = rpc(runtime, "tools/list")["tools"]
     assert {tool["name"] for tool in tools} == EXPECTED_TOOLS
-    assert len(tools) == 22
+    assert len(tools) == 23
     for tool in tools:
         assert tool["annotations"]["readOnlyHint"] is True
         assert tool["annotations"]["destructiveHint"] is False
@@ -112,7 +112,7 @@ async def test_real_sdk_streamable_http_session(runtime):
         async with ClientSession(read, write) as session:
             result = await session.initialize()
             assert result.serverInfo.name == "Garmin Wellness"
-            assert len((await session.list_tools()).tools) == 22
+            assert len((await session.list_tools()).tools) == 23
             called = await session.call_tool("get_daily_health", {"date": "2026-09-30"})
             assert not called.isError
             assert called.structuredContent["sleep"]["sleep_score"] == 85

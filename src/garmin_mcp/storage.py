@@ -22,6 +22,11 @@ activities_records = Table('activities_records', metadata,
     Column('activity_id', String(32), primary_key=True),
     Column('data', JSON, nullable=False), Column('updated_at', DateTime(timezone=True), nullable=False))
 
+sync_jobs = Table('sync_jobs', metadata,
+    Column('profile_id', String(80), ForeignKey('profiles.id'), primary_key=True),
+    Column('job_key', String(40), primary_key=True), Column('data', JSON, nullable=False),
+    Column('updated_at', DateTime(timezone=True), nullable=False))
+
 # Each failed source retains only the fields it owns, never replacing good data
 # with an unavailable response. Source timestamps describe measurement freshness.
 SOURCE_FIELDS = {
@@ -132,6 +137,35 @@ class Store:
                 if not identifier.isdigit() or not 0 < len(identifier) <= 20:
                     continue
                 self._upsert(conn, activities_records, {'profile_id': profile_id, 'activity_id': identifier, 'data': activity, 'updated_at': now}, ['profile_id','activity_id'])
+
+    def get_sync_job(self, profile_id, job_key='history'):
+        with self.engine.connect() as conn:
+            return conn.execute(select(sync_jobs.c.data).where(
+                sync_jobs.c.profile_id == profile_id, sync_jobs.c.job_key == job_key)).scalar()
+
+    def _put_sync_job(self, conn, profile_id, state, job_key='history'):
+        _validate_projection(state)
+        if conn.execute(select(profiles.c.id).where(profiles.c.id == profile_id)).scalar() is None:
+            self._upsert(conn, profiles, {'id': profile_id, 'timezone': 'America/Santiago'}, ['id'])
+        self._upsert(conn, sync_jobs, {'profile_id': profile_id, 'job_key': job_key,
+                     'data': state, 'updated_at': datetime.now(timezone.utc)}, ['profile_id', 'job_key'])
+
+    def put_sync_job(self, profile_id, state, job_key='history'):
+        with self.engine.begin() as conn:
+            self._put_sync_job(conn, profile_id, state, job_key)
+
+    def commit_history_page(self, profile_id, activities, state):
+        """Commit normalized rows and next offset together, or neither."""
+        now = datetime.now(timezone.utc)
+        with self.engine.begin() as conn:
+            self._put_sync_job(conn, profile_id, state)
+            for activity in activities:
+                _validate_projection(activity)
+                identifier = str(activity.get('activity_id', ''))
+                if not identifier.isdigit() or not 0 < len(identifier) <= 20:
+                    raise ValueError('History activity lacks a valid identifier')
+                self._upsert(conn, activities_records, {'profile_id': profile_id,
+                    'activity_id': identifier, 'data': activity, 'updated_at': now}, ['profile_id', 'activity_id'])
 
     def checkpoint(self, profile_id, day, report):
         with self.engine.begin() as conn:
