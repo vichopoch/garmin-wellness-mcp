@@ -67,7 +67,7 @@ def build_app(client=None, store=None, settings=None, identifier=None):
                 except asyncio.CancelledError: pass
 
     public_host = urlsplit(settings.resource_url).netloc
-    app = FastMCP('Garmin Wellness',stateless_http=True,json_response=True,lifespan=lifespan,
+    app = FastMCP('Garmin Wellness',stateless_http=True,json_response=True,
         transport_security=TransportSecuritySettings(enable_dns_rebinding_protection=True,
             allowed_hosts=['127.0.0.1:*','localhost:*','testserver'] + ([public_host] if public_host else []),
             allowed_origins=['http://127.0.0.1:*','http://localhost:*'] + (['https://'+public_host] if public_host else [])))
@@ -78,7 +78,19 @@ def build_app(client=None, store=None, settings=None, identifier=None):
     @app.custom_route('/healthz',methods=['GET','HEAD'])
     async def healthz(request):
         return JSONResponse({'status':'ok'})
-    return OAuthMiddleware(app.streamable_http_app(),settings), app, service
+    http_app = app.streamable_http_app()
+    transport_lifespan = http_app.router.lifespan_context
+
+    @asynccontextmanager
+    async def http_lifespan(starlette_app):
+        # FastMCP's lifespan runs per stateless MCP request. The importer must
+        # instead live for the ASGI process, including when no client connects.
+        async with transport_lifespan(starlette_app):
+            async with lifespan(app):
+                yield
+
+    http_app.router.lifespan_context = http_lifespan
+    return OAuthMiddleware(http_app,settings), app, service
 
 
 def main():
